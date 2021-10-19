@@ -3,11 +3,7 @@
 ### CS491 Senior Design Project I
 
 Members: 
-  Ufuk Palpas 21702958
-  Furkan Demir 21802818
-  Can Kılıç 21703333
-  Asya Doğa Özer 22
-  Muzaffer Köksal 21803125
+
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
