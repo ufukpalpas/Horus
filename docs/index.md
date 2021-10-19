@@ -4,6 +4,11 @@
 
 #### Team Members
 
+* Ufuk Palpas 21702958 <br/>
+* Furkan Demir 21802818 <br/>
+* Asya Doğa Özer 21803479 <br/>
+* Can Kılıç 21703333 <br/>
+* Muzaffer Köksal 21803125 <br/>
 
 
 
