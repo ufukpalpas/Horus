@@ -10,7 +10,19 @@
 * Can Kılıç 21703333 <br/>
 * Muzaffer Köksal 21803125 <br/>
 
+#### Supervisor
+Uğur Güdükbay
 
+#### Jury Members
+* Shervin Rahimzadeh Arashloo
+* Hamdi Dibeklioglu
+
+#### Innovation Expert
+Cem Çimenbiçer
+
+### Project Description
+
+### Reports
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
