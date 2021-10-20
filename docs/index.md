@@ -25,7 +25,7 @@ Project Description Report: [Report](https://github.com/ufukpalpas/Horus/blob/22
 
 ## Project Description
 
-  In the 21st century, human-machine interactions were researched through speech.
+  <p align="center"> In the 21st century, human-machine interactions were researched through speech.
 Unfortunately, these researches led to a dead-end "because the machine does not understand
 the emotional state of the speaker. Thus, researchers have introduced a newer research field
 compared to others, emotion recognition" [1]. Emotion recognition is the process of
@@ -42,7 +42,7 @@ functionality, we will use emotional cues described in psychology articles. Some
 shows that emotional cues can be used as a diagnostic tool to detect deception [3]. We will
 use these emotional cues decoded through Horus to detect deception.
 This report will contain information about the Horus, its constraints, professional and
-ethical issues, functional and non-functional requirements.
+ethical issues, functional and non-functional requirements.</p>
 
   The goal of Horus is to recognize human emotions from the mimics of their faces. A
 camera will rapidly take images/video and Horus will analyze their faces. In single user mode
