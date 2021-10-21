@@ -40,9 +40,7 @@ recognition with human face recognition in crowded areas.
 Furthermore, Horus will also have a deception detection mod. To obtain such
 functionality, we will use emotional cues described in psychology articles. Some research
 shows that emotional cues can be used as a diagnostic tool to detect deception [3]. We will
-use these emotional cues decoded through Horus to detect deception.
-This report will contain information about the Horus, its constraints, professional and
-ethical issues, functional and non-functional requirements.</p>
+use these emotional cues decoded through Horus to detect deception.</p>
 
 <p style="text-align:justify;">   The goal of Horus is to recognize human emotions from the mimics of their faces. A
 camera will rapidly take images/video and Horus will analyze their faces. In single user mode
@@ -54,9 +52,12 @@ attempt to detect the mood of the subject from long term analysis of his emotion
 Horus will also have a crowd control mod where it will analyze the emotions of a
 group of people such as stand-up, theater or movie audiences to provide feedback to show
 organizers who can look at audience excitement and decide which content to keep and which
-to discard. A playwright, for example, can look at the reception to specific acts of his play
-and decide on which changes to make. As another example, a street artist can place a camera
+to discard. For example, a street artist can place a camera
 nearby and get feedback from the Horus according to the emotions of the audience.
 Another use case can be handling tension and preventing aggression. For example,
 Horus can be used in prison common areas to keep an eye on prisoners. If Horus detects
 multiple nervous, angry prisoners and it alerts the guards.</p>
+
+<p style="text-align:justify;">   Horus can also detect emotions on video conferance calls such as Zoom. Horus will
+analyze the emotions of the participants on the conferance call and provide a feedback in a graph. The graph will contain
+average values to give an appropriate result to the user.<p>
