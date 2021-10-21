@@ -58,6 +58,6 @@ Another use case can be handling tension and preventing aggression. For example,
 Horus can be used in prison common areas to keep an eye on prisoners. If Horus detects
 multiple nervous, angry prisoners and it alerts the guards.</p>
 
-<p style="text-align:justify;">   Horus can also detect emotions on video conferance calls such as Zoom. Horus will
-analyze the emotions of the participants on the conferance call and provide a feedback in a graph. The graph will contain
+<p style="text-align:justify;">   Horus can also detect emotions on video conferance calls such as Zoom. For this option Horus will contain a screen capturing mode, and it will be able to show the results in realtime on a small window. Horus will
+analyze the emotions of the participants on the conferance call and provide a feedback in various types of graphs that is selected by the user. The graph will contain
 average values to give an appropriate result to the user.<p>
