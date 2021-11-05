@@ -25,7 +25,7 @@ Project Description Report: [Report](https://github.com/ufukpalpas/Horus/blob/22
 
 ## Project Description
 
-<p style="text-align:justify;">   The initial research for human-machine interactions were examined through speech.
+<p style="text-align:justify;">   The initial research for human-machine interactions was examined through speech.
 Unfortunately, these researches led to a dead-end "because the machine does not understand
 the emotional state of the speaker. Thus, researchers have introduced a newer research field
 compared to others, emotion recognition". Emotion recognition is the process of
@@ -50,7 +50,7 @@ time besides emotion analysis of a saved video or image. When Horus examines a s
 It will report the various emotions detected from the subject’s face and the intensity of said emotions on a scale. It will also
 attempt to detect the mood of the subject from long term analysis of his emotions.
 Horus will also have a crowd control mod where it will analyze the emotions of a
-group of people such as stand-up, video conferance, movie audiences or classrooms through multiple or a single camera to provide feedback to show
+group of people such as stand-up, video conference, movie audiences or classrooms through multiple or a single camera to provide feedback to show
 organizers, who can look at audience excitement and decide on which content to keep and which
 to discard. For example, a street artist can place a camera
 nearby and get feedback from the Horus according to the emotions of the audience by using a mobile application that shows the general mode of the crowd.
@@ -58,6 +58,6 @@ Another use case can be handling tension and preventing aggression. For example,
 Horus can be used in a prison's common areas to keep an eye on prisoners. If Horus detects
 multiple nervous, angry prisoners, it alerts the guards.</p>
 
-<p style="text-align:justify;">   Horus can also detect emotions on video conferance calls such as Zoom. For this option, Horus will contain a screen capturing mode, and it will be able to show the results in realtime on a small window. Horus will
-analyze the emotions of the participants on the conferance call and provide a feedback in various types of graphs that is selected by the user. The graph will contain
+<p style="text-align:justify;">   Horus can also detect emotions on video conference calls such as Zoom. For this option, Horus will contain a screen capturing mode, and it will be able to show the results in realtime on a small window. Horus will
+analyze the emotions of the participants on the conference call and provide feedback in various types of graphs that are selected by the user. The graph will contain
 average values to give an appropriate result to the user.<p>
