@@ -22,7 +22,7 @@
 
 ## Reports
 Project Description Report: [Project Description Report](https://github.com/ufukpalpas/Horus/blob/22817db71f824b13291e059650f38b253c3b2108/Project%20Reports/CS-491_Horus_Project_Description_Report.pdf)
-Analysis Report: [Analysis Report](https://github.com/ufukpalpas/Horus/blob/636e517b101be29b5b7233821fa7675ee250e6fa/Project%20Reports/CS-491%20Analysis%20Report.pdf)
+<br/>Analysis Report: [Analysis Report](https://github.com/ufukpalpas/Horus/blob/896618ddd8bb396a704d73522877224c3983df08/Project%20Reports/CS491_Analysis_Report.pdf)
 
 ## Project Description
 
