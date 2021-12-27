@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Horus",
+            "request": "launch",
+            "mainClass": "Horus",
+            "projectName": "src_67ac57ae"
+        },
+        {
+            "type": "java",
+            "name": "Launch Horus",
+            "request": "launch",
+            "mainClass": "Horus",
+            "projectName": "Horus_e1ad3f2b"
+        },
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Launch Horus",
+            "request": "launch",
+            "vmArgs": "--module-path C:/Program Files/javafx-sdk-17.0.1/lib --add-modules javafx.controls,javafx.fxml",
+            "mainClass": "Horus",
+            "projectName": "Horus_176f6aca"
+        }
+    ]
+}
