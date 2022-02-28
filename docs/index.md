@@ -24,8 +24,7 @@
 Project Description Report: [Project Description Report](https://github.com/ufukpalpas/Horus/blob/22817db71f824b13291e059650f38b253c3b2108/Project%20Reports/CS-491_Horus_Project_Description_Report.pdf)
 <br/>Analysis Report: [Analysis Report](https://github.com/ufukpalpas/Horus/blob/896618ddd8bb396a704d73522877224c3983df08/Project%20Reports/CS491_Analysis_Report.pdf)
 <br/>High-Level Design Report: [High-Level Design Report](https://github.com/ufukpalpas/Horus/blob/bea5e70b871b78ce9bb694a3c0b9fae6edb53373/Project%20Reports/CS491_High_Level_Design_Report.pdf)
-<br/>Low-Level Design Report: [Low-Level Design Report]
-(https://github.com/ufukpalpas/Horus/blob/e96ad2895a60e9b8cdb812f730fc1453b9ad8679/Project%20Reports/CS492-Horus-Low_Level_Design_Report.pdf)
+<br/>Low-Level Design Report: [Low-Level Design Report](https://github.com/ufukpalpas/Horus/blob/e96ad2895a60e9b8cdb812f730fc1453b9ad8679/Project%20Reports/CS492-Horus-Low_Level_Design_Report.pdf)
 
 ## Project Description
 
