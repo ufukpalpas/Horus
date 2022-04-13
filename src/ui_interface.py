@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'untitled2UvQneV.ui'
+## Form generated from reading UI file 'untitled2mNpKWi.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -34,21 +34,21 @@ class Ui_MainWindow(object):
         self.stackedWidget = QStackedWidget(self.centralwidget)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setStyleSheet(u"border-image: url(:/Horus Main Page/startscreen.jpg);")
-        self.page = QWidget()
-        self.page.setObjectName(u"page")
-        self.gridLayout_2 = QGridLayout(self.page)
+        self.startPage = QWidget()
+        self.startPage.setObjectName(u"startPage")
+        self.gridLayout_2 = QGridLayout(self.startPage)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.logo0 = QLabel(self.page)
+        self.logo0 = QLabel(self.startPage)
         self.logo0.setObjectName(u"logo0")
         self.logo0.setMinimumSize(QSize(300, 150))
         self.logo0.setStyleSheet(u"border-image: url(:/Horus Main Page/Horus.png);")
 
         self.verticalLayout.addWidget(self.logo0, 0, Qt.AlignHCenter|Qt.AlignTop)
 
-        self.name0 = QLabel(self.page)
+        self.name0 = QLabel(self.startPage)
         self.name0.setObjectName(u"name0")
         self.name0.setMinimumSize(QSize(300, 75))
         self.name0.setStyleSheet(u"border-image: url(:/Horus Main Page/HorusName.png);")
@@ -61,7 +61,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.start_btn = QPushButton(self.page)
+        self.start_btn = QPushButton(self.startPage)
         self.start_btn.setObjectName(u"start_btn")
         self.start_btn.setMinimumSize(QSize(200, 50))
         self.start_btn.setStyleSheet(u"border-image: url(:/Horus Main Page/start.png);")
@@ -75,14 +75,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addLayout(self.verticalLayout_2, 1, 0, 1, 1)
 
-        self.stackedWidget.addWidget(self.page)
-        self.page_2 = QWidget()
-        self.page_2.setObjectName(u"page_2")
-        self.gridLayout_3 = QGridLayout(self.page_2)
+        self.stackedWidget.addWidget(self.startPage)
+        self.mainMenu = QWidget()
+        self.mainMenu.setObjectName(u"mainMenu")
+        self.gridLayout_3 = QGridLayout(self.mainMenu)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.verticalLayout_7 = QVBoxLayout()
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.crowd_control_btn = QPushButton(self.page_2)
+        self.crowd_control_btn = QPushButton(self.mainMenu)
         self.crowd_control_btn.setObjectName(u"crowd_control_btn")
         self.crowd_control_btn.setMinimumSize(QSize(300, 40))
         self.crowd_control_btn.setStyleSheet(u"border-image: url(:/Horus Main Page/crowdcontrol.png);")
@@ -94,7 +94,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6 = QVBoxLayout()
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.single_user_btn = QPushButton(self.page_2)
+        self.single_user_btn = QPushButton(self.mainMenu)
         self.single_user_btn.setObjectName(u"single_user_btn")
         self.single_user_btn.setMinimumSize(QSize(300, 50))
         self.single_user_btn.setStyleSheet(u"border-image: url(:/Horus Main Page/singleuser.png);")
@@ -106,7 +106,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_8 = QVBoxLayout()
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.deception_det_btn = QPushButton(self.page_2)
+        self.deception_det_btn = QPushButton(self.mainMenu)
         self.deception_det_btn.setObjectName(u"deception_det_btn")
         self.deception_det_btn.setMinimumSize(QSize(400, 50))
         self.deception_det_btn.setStyleSheet(u"border-image: url(:/Horus Main Page/deceptiondetection.png);")
@@ -118,7 +118,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_11 = QVBoxLayout()
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.screen_cap_btn = QPushButton(self.page_2)
+        self.screen_cap_btn = QPushButton(self.mainMenu)
         self.screen_cap_btn.setObjectName(u"screen_cap_btn")
         self.screen_cap_btn.setMinimumSize(QSize(350, 35))
         self.screen_cap_btn.setStyleSheet(u"border-image: url(:/Horus Main Page/screencapt\u0131ure.png);")
@@ -130,7 +130,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_10 = QVBoxLayout()
         self.verticalLayout_10.setObjectName(u"verticalLayout_10")
-        self.pushButton_3 = QPushButton(self.page_2)
+        self.pushButton_3 = QPushButton(self.mainMenu)
         self.pushButton_3.setObjectName(u"pushButton_3")
         self.pushButton_3.setMinimumSize(QSize(400, 40))
         self.pushButton_3.setStyleSheet(u"border-image: url(:/Horus Main Page/lastanalyses.png);")
@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.logo1 = QLabel(self.page_2)
+        self.logo1 = QLabel(self.mainMenu)
         self.logo1.setObjectName(u"logo1")
         self.logo1.setMinimumSize(QSize(200, 100))
         self.logo1.setStyleSheet(u"border-image: url(:/Horus Main Page/Horus.png);")
@@ -155,7 +155,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4 = QVBoxLayout()
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.name1 = QLabel(self.page_2)
+        self.name1 = QLabel(self.mainMenu)
         self.name1.setObjectName(u"name1")
         self.name1.setMinimumSize(QSize(400, 50))
         self.name1.setStyleSheet(u"border-image: url(:/Horus Main Page/choosemode.png);")
@@ -165,7 +165,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addLayout(self.verticalLayout_4, 1, 0, 1, 1)
 
-        self.stackedWidget.addWidget(self.page_2)
+        self.stackedWidget.addWidget(self.mainMenu)
         self.page_3 = QWidget()
         self.page_3.setObjectName(u"page_3")
         self.stackedWidget.addWidget(self.page_3)
@@ -195,4 +195,3 @@ class Ui_MainWindow(object):
         self.logo1.setText("")
         self.name1.setText("")
     # retranslateUi
-
