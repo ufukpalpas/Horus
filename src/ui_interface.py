@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'untitled2IeHOPT.ui'
+## Form generated from reading UI file 'untitled2UvQneV.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -11,10 +11,17 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+from PyQt5.QtCore import pyqtSlot
 
 import startscreen_rc
 
 class Ui_MainWindow(object):
+    
+    @pyqtSlot()
+    def on_click(self):
+        self.stackedWidget.setCurrentIndex(1)
+        print('PyQt5 button click')
+    
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -61,6 +68,7 @@ class Ui_MainWindow(object):
         self.start_btn.setCheckable(False)
         self.start_btn.setChecked(False)
         self.start_btn.setAutoDefault(False)
+        self.start_btn.clicked.connect(self.on_click)
 
         self.verticalLayout_2.addWidget(self.start_btn, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -168,7 +176,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
