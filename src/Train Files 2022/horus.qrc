@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="background">
+    <file>ui_img/start.png</file>
+    <file>ui_img/HorusName.png</file>
+    <file>ui_img/Horus.png</file>
+    <file>ui_img/startscreen.jpg</file>
+  </qresource>
+</RCC>
