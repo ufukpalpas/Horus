@@ -1,0 +1,32 @@
+<RCC>
+  <qresource prefix="Horus Main Page">
+    <file>capture.png</file>
+    <file>gotoresults.png</file>
+    <file>listanalysis.png</file>
+    <file>histogram.png</file>
+    <file>gotoresults.png</file>
+    <file>donut.png</file>
+    <file>pie.png</file>
+    <file>table.png</file>
+    <file>linechart.png</file>
+    <file>download.png</file>
+    <file>edit.png</file>
+    <file>chooseoutputtype.png</file>
+    <file>upload.png</file>
+    <file>empty.png</file>
+    <file>play.png</file>
+    <file>repeat.png</file>
+    <file>stop.png</file>
+    <file>backButton.png</file>
+    <file>choosemode.png</file>
+    <file>crowdcontrol.png</file>
+    <file>deceptiondetection.png</file>
+    <file>Horus.png</file>
+    <file>HorusName.png</file>
+    <file>lastanalyses.png</file>
+    <file>screencaptıure.png</file>
+    <file>singleuser.png</file>
+    <file>start.png</file>
+    <file>startscreen.jpg</file>
+  </qresource>
+</RCC>
