@@ -294,11 +294,24 @@ class Ui_MainWindow(object):
         self.screenlayout.setSpacing(0)
         self.screenlayout.setObjectName(u"screenlayout")
         self.screenlayout.setContentsMargins(0, 0, 0, 0)
+        self.p3_screen_label = QLabel(self.p3_middle_frame)
+        self.p3_screen_label.setObjectName(u"p3_screen_label")
+        sizePolicy1 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.p3_screen_label.sizePolicy().hasHeightForWidth())
+        self.p3_screen_label.setSizePolicy(sizePolicy1)
 
+        self.screenlayout.addWidget(self.p3_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)#Qt.AlignHCenter|Qt.AlignVCenter
         self.gridLayout_4.addWidget(self.p3_middle_frame, 1, 0, 1, 1)
+
+        grey3 = QPixmap(1920, 1080)
+        grey3.fill(QColor('darkGray'))
+        self.p3_screen_label.setPixmap(grey3)
 
         self.stackedWidget.addWidget(self.page_3)
         self.p3_bottom_frame.raise_()
+        self.p3_middle_frame.raise_()
         self.page_4 = QWidget()
         self.page_4.setObjectName(u"page_4")
         self.gridLayout_14 = QGridLayout(self.page_4)
@@ -391,8 +404,21 @@ class Ui_MainWindow(object):
         self.screenlayout2.setSpacing(0)
         self.screenlayout2.setObjectName(u"screenlayout2")
         self.screenlayout2.setContentsMargins(0, 0, 0, 0)
+        self.p4_screen_label = QLabel(self.p4_middle_frame)
+        self.p4_screen_label.setObjectName(u"p4_screen_label")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.p4_screen_label.sizePolicy().hasHeightForWidth())
+        self.p4_screen_label.setSizePolicy(sizePolicy2)
+
+        self.screenlayout2.addWidget(self.p4_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)
 
         self.gridLayout_14.addWidget(self.p4_middle_frame, 1, 0, 1, 1)
+
+        grey4 = QPixmap(1920, 1080)
+        grey4.fill(QColor('darkGray'))
+        self.p4_screen_label.setPixmap(grey4)
 
         self.stackedWidget.addWidget(self.page_4)
         self.page_5 = QWidget()
@@ -450,8 +476,21 @@ class Ui_MainWindow(object):
         self.screenlayout3.setSpacing(0)
         self.screenlayout3.setObjectName(u"screenlayout3")
         self.screenlayout3.setContentsMargins(0, 0, 0, 0)
+        self.p5_screen_label = QLabel(self.p5_middle_frame)
+        self.p5_screen_label.setObjectName(u"p5_screen_label")
+        sizePolicy3 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.p5_screen_label.sizePolicy().hasHeightForWidth())
+        self.p5_screen_label.setSizePolicy(sizePolicy3)
+
+        self.screenlayout3.addWidget(self.p5_screen_label, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.gridLayout_15.addWidget(self.p5_middle_frame, 1, 0, 1, 1)
+
+        grey5 = QPixmap(1920, 1080)
+        grey5.fill(QColor('darkGray'))
+        self.p5_screen_label.setPixmap(grey5)
 
         self.stackedWidget.addWidget(self.page_5)
         self.page_21 = QWidget()
@@ -545,8 +584,18 @@ class Ui_MainWindow(object):
         self.screenlayout4.setSpacing(0)
         self.screenlayout4.setObjectName(u"screenlayout4")
         self.screenlayout4.setContentsMargins(0, 0, 0, 0)
+        self.p21_screen_label = QLabel(self.p21_middle_frame)
+        self.p21_screen_label.setObjectName(u"p21_screen_label")
+        sizePolicy2.setHeightForWidth(self.p21_screen_label.sizePolicy().hasHeightForWidth())
+        self.p21_screen_label.setSizePolicy(sizePolicy2)
+        
+        self.screenlayout4.addWidget(self.p21_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)
 
         self.gridLayout_16.addWidget(self.p21_middle_frame, 1, 0, 1, 1)
+
+        grey6 = QPixmap(1920, 1080)
+        grey6.fill(QColor('darkGray'))
+        self.p21_screen_label.setPixmap(grey6)
 
         self.stackedWidget.addWidget(self.page_21)
         self.page_22 = QWidget()
@@ -832,6 +881,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.setText("")
         self.back_button_6.setText("")
         self.upload_button_3.setText("")
+        self.p3_screen_label.setText("")
         self.scanning_label_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -843,12 +893,14 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText("")
         self.back_button_5.setText("")
         self.upload_button_2.setText("")
+        self.p4_screen_label.setText("")
         self.stand_still_label.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">STAND STILL...</span></p></body></html>", None))
         self.back_button_4.setText("")
+        self.p5_screen_label.setText("")
         self.scanning_label.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -860,6 +912,7 @@ class Ui_MainWindow(object):
         self.pushButton.setText("")
         self.back_button_3.setText("")
         self.upload_button.setText("")
+        self.p21_screen_label.setText("")
         self.back_button_2.setText("")
         self.chooseo_output_type.setText("")
         self.linechart_button.setText("")
