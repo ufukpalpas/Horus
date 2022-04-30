@@ -7,42 +7,61 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from VideoThread import VideoSingleThread
+import PyQt5
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from PyQt5.QtCore import pyqtSlot
-
+from PyQt5.QtWidgets import QFileDialog
+from functools import partial
+import cv2
 import startscreen_rc
 
 class Ui_MainWindow(object):
         
-    @pyqtSlot()
-    def on_click_to_menu(self):
+    def on_click_to_menu(self, sender):
         self.stackedWidget.setCurrentIndex(1)
-    @pyqtSlot()
+        if sender == "back_button_6":
+            self.videoSingleThread.stop()
+        
     def on_click_single_user(self):
         self.stackedWidget.setCurrentIndex(2)
-    @pyqtSlot()
+        self.videoSingleThread = VideoSingleThread()
+        self.videoSingleThread.start()
+        self.videoSingleThread.ImageUpdate.connect(self.ImageUpdateSlot)
+    
+    def pauseVidBtn(self):
+        self.videoSingleThread.pause()
+        
+    def playVidBtn(self):
+        self.videoSingleThread.play()
+    
+    def replayVidBtn(self):
+        self.videoSingleThread.replay()
+    
     def on_click_list_analyses(self):
         self.stackedWidget.setCurrentIndex(9)
-    @pyqtSlot()
     def on_click_crowd_control(self):
         self.stackedWidget.setCurrentIndex(8)
-    @pyqtSlot()
     def on_click_crowd_control_run(self):
         self.stackedWidget.setCurrentIndex(3)
-    @pyqtSlot()
     def on_click_deception_detection(self):
         self.stackedWidget.setCurrentIndex(4)
-    @pyqtSlot()
     def on_click_screen_capture(self):
-        self.stackedWidget.setCurrentIndex(5)
-        
-    @pyqtSlot()
+        self.stackedWidget.setCurrentIndex(5)   
     def on_click_goto_result(self):
         self.stackedWidget.setCurrentIndex(6)
         
+    def ImageUpdateSlot(self, Image):
+        self.p3_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
+        
+    def on_click_upload(self):
+        self.pauseVidBtn()
+        options = QFileDialog.Options()
+        filePath, _ = QFileDialog.getOpenFileName(None,"Select Video File", "","Video File (*.mp4 *.avi *.mov *.mpeg *.flv *.wmv)", options=options)
+        self.videoSingleThread.open(filePath)
+    
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -89,7 +108,7 @@ class Ui_MainWindow(object):
         self.start_button.setCheckable(False)
         self.start_button.setChecked(False)
         self.start_button.setAutoDefault(False)
-        self.start_button.clicked.connect(self.on_click_to_menu)
+        self.start_button.clicked.connect(partial(self.on_click_to_menu, "start_button"))
 
         self.verticalLayout_2.addWidget(self.start_button, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -229,6 +248,7 @@ class Ui_MainWindow(object):
         self.replay_button_3.setObjectName(u"replay_button_3")
         self.replay_button_3.setMinimumSize(QSize(50, 50))
         self.replay_button_3.setStyleSheet(u"border-image: url(:/Horus Main Page/repeat.png);")
+        self.replay_button_3.clicked.connect(self.replayVidBtn)
 
         self.horizontalLayout.addWidget(self.replay_button_3, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -236,6 +256,7 @@ class Ui_MainWindow(object):
         self.pause_button_3.setObjectName(u"pause_button_3")
         self.pause_button_3.setMinimumSize(QSize(50, 50))
         self.pause_button_3.setStyleSheet(u"border-image: url(:/Horus Main Page/stop.png);")
+        self.pause_button_3.clicked.connect(self.pauseVidBtn)
 
         self.horizontalLayout.addWidget(self.pause_button_3, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -243,6 +264,7 @@ class Ui_MainWindow(object):
         self.play_button_3.setObjectName(u"play_button_3")
         self.play_button_3.setMinimumSize(QSize(50, 50))
         self.play_button_3.setStyleSheet(u"border-image: url(:/Horus Main Page/play.png);")
+        self.play_button_3.clicked.connect(self.playVidBtn)
 
         self.horizontalLayout.addWidget(self.play_button_3, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -272,7 +294,7 @@ class Ui_MainWindow(object):
         self.back_button_6.setMinimumSize(QSize(125, 50))
         self.back_button_6.setLayoutDirection(Qt.LeftToRight)
         self.back_button_6.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_6.clicked.connect(self.on_click_to_menu)
+        self.back_button_6.clicked.connect(partial(self.on_click_to_menu, "back_button_6"))
         
         self.horizontalLayout_2.addWidget(self.back_button_6, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -280,6 +302,7 @@ class Ui_MainWindow(object):
         self.upload_button_3.setObjectName(u"upload_button_3")
         self.upload_button_3.setMinimumSize(QSize(80, 50))
         self.upload_button_3.setStyleSheet(u"border-image: url(:/Horus Main Page/upload.png);")
+        self.upload_button_3.clicked.connect(self.on_click_upload)
 
         self.horizontalLayout_2.addWidget(self.upload_button_3, 0, Qt.AlignRight|Qt.AlignTop)
 
@@ -381,7 +404,7 @@ class Ui_MainWindow(object):
         self.back_button_5.setObjectName(u"back_button_5")
         self.back_button_5.setMinimumSize(QSize(125, 50))
         self.back_button_5.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_5.clicked.connect(self.on_click_to_menu)
+        self.back_button_5.clicked.connect(partial(self.on_click_to_menu, "back_button_5"))
 
 
         self.horizontalLayout_3.addWidget(self.back_button_5, 0, Qt.AlignLeft|Qt.AlignTop)
@@ -461,7 +484,7 @@ class Ui_MainWindow(object):
         self.back_button_4.setObjectName(u"back_button_4")
         self.back_button_4.setMinimumSize(QSize(125, 50))
         self.back_button_4.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_4.clicked.connect(self.on_click_to_menu)
+        self.back_button_4.clicked.connect(partial(self.on_click_to_menu, "back_button_4"))
 
         self.verticalLayout_59.addWidget(self.back_button_4, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -562,7 +585,7 @@ class Ui_MainWindow(object):
         self.back_button_3.setObjectName(u"back_button_3")
         self.back_button_3.setMinimumSize(QSize(125, 50))
         self.back_button_3.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_3.clicked.connect(self.on_click_to_menu)
+        self.back_button_3.clicked.connect(partial(self.on_click_to_menu, "back_button_3"))
 
         self.horizontalLayout_7.addWidget(self.back_button_3, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -761,7 +784,7 @@ class Ui_MainWindow(object):
         self.back_button_8.setObjectName(u"back_button_8")
         self.back_button_8.setMinimumSize(QSize(125, 50))
         self.back_button_8.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_8.clicked.connect(self.on_click_to_menu)
+        self.back_button_8.clicked.connect(partial(self.on_click_to_menu, "back_button_8"))
 
         self.verticalLayout_60.addWidget(self.back_button_8, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -830,7 +853,7 @@ class Ui_MainWindow(object):
         self.back_button_7.setObjectName(u"back_button_7")
         self.back_button_7.setMinimumSize(QSize(125, 50))
         self.back_button_7.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_7.clicked.connect(self.on_click_to_menu)
+        self.back_button_7.clicked.connect(partial(self.on_click_to_menu, "back_button_7"))
 
         self.verticalLayout_62.addWidget(self.back_button_7, 0, Qt.AlignLeft|Qt.AlignTop)
 

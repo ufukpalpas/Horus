@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>Horus</class>
+ <widget class="QMainWindow" name="Horus">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -30,7 +30,7 @@
        <string notr="true">border-image: url(:/Horus Main Page/startscreen.jpg);</string>
       </property>
       <property name="currentIndex">
-       <number>8</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -500,10 +500,37 @@ p, li { white-space: pre-wrap; }
            <property name="bottomMargin">
             <number>0</number>
            </property>
+           <item alignment="Qt::AlignRight|Qt::AlignVCenter">
+            <widget class="QLabel" name="p3_screen_label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>1231</width>
+               <height>581</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="ui_img/ui_img/startscreen.qrc">:/Horus Main Page/startscreen.jpg</pixmap>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
        </layout>
+       <zorder>p3_top_frame</zorder>
+       <zorder>p3_middle_frame</zorder>
        <zorder>p3_bottom_frame</zorder>
       </widget>
       <widget class="QWidget" name="page_4">
@@ -729,6 +756,19 @@ p, li { white-space: pre-wrap; }
            <property name="bottomMargin">
             <number>0</number>
            </property>
+           <item>
+            <widget class="QLabel" name="p4_screen_label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -877,6 +917,22 @@ p, li { white-space: pre-wrap; }
            <property name="bottomMargin">
             <number>0</number>
            </property>
+           <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="p5_screen_label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="ui_img/ui_img/startscreen.qrc">:/Horus Main Page/startscreen.jpg</pixmap>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -1105,6 +1161,22 @@ p, li { white-space: pre-wrap; }
            <property name="bottomMargin">
             <number>0</number>
            </property>
+           <item alignment="Qt::AlignRight|Qt::AlignVCenter">
+            <widget class="QLabel" name="p21_screen_label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="ui_img/ui_img/startscreen.qrc">:/Horus Main Page/startscreen.jpg</pixmap>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
