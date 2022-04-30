@@ -60,7 +60,8 @@ class Ui_MainWindow(object):
         self.pauseVidBtn()
         options = QFileDialog.Options()
         filePath, _ = QFileDialog.getOpenFileName(None,"Select Video File", "","Video File (*.mp4 *.avi *.mov *.mpeg *.flv *.wmv)", options=options)
-        self.videoSingleThread.open(filePath)
+        if filePath != "":
+            self.videoSingleThread.open(filePath)
     
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -328,9 +329,7 @@ class Ui_MainWindow(object):
         self.screenlayout.addWidget(self.p3_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)#Qt.AlignHCenter|Qt.AlignVCenter
         self.gridLayout_4.addWidget(self.p3_middle_frame, 1, 0, 1, 1)
 
-        grey3 = QPixmap(1920, 1080)
-        grey3.fill(QColor('darkGray'))
-        self.p3_screen_label.setPixmap(grey3)
+        self.p3_screen_label.setPixmap(QPixmap(u":/Horus Main Page/nocam.png"))
 
         self.stackedWidget.addWidget(self.page_3)
         self.p3_bottom_frame.raise_()
@@ -439,9 +438,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_14.addWidget(self.p4_middle_frame, 1, 0, 1, 1)
 
-        grey4 = QPixmap(1920, 1080)
-        grey4.fill(QColor('darkGray'))
-        self.p4_screen_label.setPixmap(grey4)
+        self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/nocam.png"))
 
         self.stackedWidget.addWidget(self.page_4)
         self.page_5 = QWidget()
@@ -511,9 +508,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_15.addWidget(self.p5_middle_frame, 1, 0, 1, 1)
 
-        grey5 = QPixmap(1920, 1080)
-        grey5.fill(QColor('darkGray'))
-        self.p5_screen_label.setPixmap(grey5)
+        self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/nocam.png"))
 
         self.stackedWidget.addWidget(self.page_5)
         self.page_21 = QWidget()
@@ -616,9 +611,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_16.addWidget(self.p21_middle_frame, 1, 0, 1, 1)
 
-        grey6 = QPixmap(1920, 1080)
-        grey6.fill(QColor('darkGray'))
-        self.p21_screen_label.setPixmap(grey6)
+        self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/nocam.png"))
 
         self.stackedWidget.addWidget(self.page_21)
         self.page_22 = QWidget()
