@@ -8,7 +8,7 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 from msilib.schema import ListView
-from VideoThread import VideoMultiThread, VideoSingleThread
+from VideoThread import ScreenCaptureThread, VideoMultiThread, VideoSingleThread
 import PyQt5
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -110,6 +110,10 @@ class Ui_MainWindow(object):
         self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(4)
     def on_click_screen_capture(self):
+        self.screenCapture = ScreenCaptureThread()
+        self.screenCapture.start()
+        self.screenCapture.ImageUpdate.connect(self.ImageUpdateSlot_3)
+        self.screenCapture.ValChanged.connect(self.CameraCheckSlot)
         self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(5)   
     def on_click_goto_result(self):
@@ -120,6 +124,9 @@ class Ui_MainWindow(object):
 
     def ImageUpdateSlot_2(self, Image):
         self.p4_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
+        
+    def ImageUpdateSlot_3(self, Image):
+        self.p21_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
     
     def CameraCheckSlot(self, val):
         if val == 1:
