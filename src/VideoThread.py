@@ -6,9 +6,12 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.preprocessing.image import img_to_array
+from mss import mss
 
 class VideoSingleThread(QThread):
     ImageUpdate = pyqtSignal(QImage)
+    ValChanged = pyqtSignal(int)
+    
     def __init__(self):
         super().__init__()
         self.model = model_from_json(open("model.json", "r").read())
@@ -23,7 +26,7 @@ class VideoSingleThread(QThread):
         cap = cv2.VideoCapture(0)
         # if not cap.isOpened():
         #     print("^No camera detected!")
-        
+        self.changePixmap = True
         self.pauseVid = False
         self.replayVid = False
         self.openVid = False
@@ -38,7 +41,7 @@ class VideoSingleThread(QThread):
                 self.openVid = False
             if not self.pauseVid:
                 ret, frame = cap.read()
-
+            
             if ret:
                 h,w,_ = frame.shape
                 gray_image= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -78,6 +81,10 @@ class VideoSingleThread(QThread):
                 Pic = ConvertToQtFormat.scaled(1920,1080,Qt.KeepAspectRatio)
                 if not self.pauseVid:
                     self.ImageUpdate.emit(Pic)
+            else:
+                if self.changePixmap:
+                    self.ValChanged.emit(1)
+                    self.changePixmap = False
             cv2.waitKey(1) #kaldır kamera gelince
         cap.release()
      

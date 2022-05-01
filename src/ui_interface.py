@@ -30,6 +30,8 @@ class Ui_MainWindow(object):
         self.videoSingleThread = VideoSingleThread()
         self.videoSingleThread.start()
         self.videoSingleThread.ImageUpdate.connect(self.ImageUpdateSlot)
+        self.videoSingleThread.ValChanged.connect(self.CameraCheckSlot)
+        self.p3_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png")) #bunu asağıdan aldık buraya koyduk herbirininkini al kendi butonuna koy
     
     def pauseVidBtn(self):
         self.videoSingleThread.pause()
@@ -55,6 +57,14 @@ class Ui_MainWindow(object):
         
     def ImageUpdateSlot(self, Image):
         self.p3_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
+    
+    def CameraCheckSlot(self, val):
+        if val == 1:
+            stt = u":/Horus Main Page/nocam.png"
+        self.p3_screen_label.setPixmap(QPixmap(stt))
+        self.p4_screen_label.setPixmap(QPixmap(stt))
+        self.p5_screen_label.setPixmap(QPixmap(stt))
+        self.p21_screen_label.setPixmap(QPixmap(stt))
         
     def on_click_upload(self):
         self.pauseVidBtn()
@@ -329,8 +339,6 @@ class Ui_MainWindow(object):
         self.screenlayout.addWidget(self.p3_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)#Qt.AlignHCenter|Qt.AlignVCenter
         self.gridLayout_4.addWidget(self.p3_middle_frame, 1, 0, 1, 1)
 
-        self.p3_screen_label.setPixmap(QPixmap(u":/Horus Main Page/nocam.png"))
-
         self.stackedWidget.addWidget(self.page_3)
         self.p3_bottom_frame.raise_()
         self.p3_middle_frame.raise_()
@@ -438,7 +446,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_14.addWidget(self.p4_middle_frame, 1, 0, 1, 1)
 
-        self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/nocam.png"))
+        self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
 
         self.stackedWidget.addWidget(self.page_4)
         self.page_5 = QWidget()
@@ -508,7 +516,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_15.addWidget(self.p5_middle_frame, 1, 0, 1, 1)
 
-        self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/nocam.png"))
+        self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
 
         self.stackedWidget.addWidget(self.page_5)
         self.page_21 = QWidget()
@@ -611,7 +619,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_16.addWidget(self.p21_middle_frame, 1, 0, 1, 1)
 
-        self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/nocam.png"))
+        self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
 
         self.stackedWidget.addWidget(self.page_21)
         self.page_22 = QWidget()
