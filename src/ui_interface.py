@@ -7,6 +7,7 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
+from msilib.schema import ListView
 from VideoThread import VideoSingleThread
 import PyQt5
 from PyQt5.QtGui import *
@@ -44,12 +45,45 @@ class Ui_MainWindow(object):
     
     def on_click_list_analyses(self):
         self.stackedWidget.setCurrentIndex(9)
+        
     def on_click_crowd_control(self):
         self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
+        self.camCount = self.countCameras()
+        print(self.camCount)
+        ff = QFont("Times")
+        ff.setPointSize(16)
+        self.model = PyQt5.QtGui.QStandardItemModel()
+        self.listView.setModel(self.model)
+        
+        for i in range(self.camCount):
+            item = PyQt5.QtGui.QStandardItem()
+            strr = "Camera " + str(i)
+            item.setText(strr)
+            item.setFont(ff)
+            item.setEditable(False)
+            item.setCheckable(True)
+            self.model.appendRow(item)   
+            
+        if self.camCount == 0:
+            item = PyQt5.QtGui.QStandardItem()
+            item.setText("No Cameras Detected")
+            item.setFont(ff)
+            item.setEditable(False)
+            self.model.appendRow(item)   
+                
         self.stackedWidget.setCurrentIndex(8)
-
+        
     def on_click_crowd_control_run(self):
-        self.stackedWidget.setCurrentIndex(3)
+        self.checkedCameraInds = []
+        for index in range(self.model.rowCount()):
+            item = self.model.item(index)
+            isChecked = item.checkState()
+            if isChecked:
+                self.checkedCameraInds.append(index)
+        if len(self.checkedCameraInds) > 0:
+            self.stackedWidget.setCurrentIndex(3)
+        else:
+            print("No camera Selected")
     def on_click_deception_detection(self):
         self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(4)
@@ -70,6 +104,15 @@ class Ui_MainWindow(object):
         self.p5_screen_label.setPixmap(QPixmap(stt))
         self.p21_screen_label.setPixmap(QPixmap(stt))
         
+    def countCameras(self):
+        camera = 0
+        while True:
+            if (cv2.VideoCapture(camera,cv2.CAP_DSHOW).grab()) is True:
+                camera = camera + 1
+            else:
+                cv2.destroyAllWindows()
+                return(int(camera))        
+    
     def on_click_upload(self):
         self.pauseVidBtn()
         options = QFileDialog.Options()
