@@ -8,7 +8,7 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 from msilib.schema import ListView
-from VideoThread import VideoSingleThread
+from VideoThread import VideoMultiThread, VideoSingleThread
 import PyQt5
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -25,6 +25,8 @@ class Ui_MainWindow(object):
         self.stackedWidget.setCurrentIndex(1)
         if sender == "back_button_6":
             self.videoSingleThread.stop()
+        elif sender == "back_button_5":
+            self.multiThread.stop_threads()
         
     def on_click_single_user(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -73,6 +75,21 @@ class Ui_MainWindow(object):
                 
         self.stackedWidget.setCurrentIndex(8)
         
+    def on_click_change_cam(self):
+        if self.multiThread.currentThread == (self.multiThread.threadCount - 1):
+            self.multiThread.choose_thread(0)
+            self.multiThread.currentThread = 0
+            self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
+            self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)
+            print("Chosen camera 0")
+        else:
+            self.multiThread.choose_thread(self.multiThread.currentThread + 1)
+            self.multiThread.currentThread += 1
+            self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
+            self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)
+            print("Chosen camera ", self.multiThread.currentThread)
+            
+    
     def on_click_crowd_control_run(self):
         self.checkedCameraInds = []
         for index in range(self.model.rowCount()):
@@ -81,7 +98,12 @@ class Ui_MainWindow(object):
             if isChecked:
                 self.checkedCameraInds.append(index)
         if len(self.checkedCameraInds) > 0:
+            self.multiThread = VideoMultiThread(self.checkedCameraInds)
+            self.multiThread.startThreads()
+            self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
+            self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)#   ValChanged.connect(self.CameraCheckSlot)
             self.stackedWidget.setCurrentIndex(3)
+            self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         else:
             print("No camera Selected")
     def on_click_deception_detection(self):
@@ -95,6 +117,9 @@ class Ui_MainWindow(object):
         
     def ImageUpdateSlot(self, Image):
         self.p3_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
+
+    def ImageUpdateSlot_2(self, Image):
+        self.p4_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
     
     def CameraCheckSlot(self, val):
         if val == 1:
@@ -317,7 +342,6 @@ class Ui_MainWindow(object):
         self.pause_button_3.clicked.connect(self.pauseVidBtn)
 
         self.horizontalLayout.addWidget(self.pause_button_3, 0, Qt.AlignHCenter|Qt.AlignBottom)
-
         self.play_button_3 = QPushButton(self.p3_bottom_frame)
         self.play_button_3.setObjectName(u"play_button_3")
         self.play_button_3.setMinimumSize(QSize(50, 50))
@@ -405,6 +429,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.setSpacing(0)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        
         self.scanning_label_2 = QTextBrowser(self.p4_bottom_frame)
         self.scanning_label_2.setObjectName(u"scanning_label_2")
         self.scanning_label_2.setMaximumSize(QSize(200, 50))
@@ -430,8 +455,15 @@ class Ui_MainWindow(object):
         self.play_button_2.setObjectName(u"play_button_2")
         self.play_button_2.setMinimumSize(QSize(50, 50))
         self.play_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/play.png);")
-
+        
         self.horizontalLayout_6.addWidget(self.play_button_2, 0, Qt.AlignHCenter|Qt.AlignBottom)
+        
+        self.changeCamButton = QPushButton(self.p4_bottom_frame)
+        self.changeCamButton.setObjectName(u"changeCamButton")
+
+        self.horizontalLayout_6.addWidget(self.changeCamButton)
+
+        self.changeCamButton.clicked.connect(self.on_click_change_cam)
 
         self.pushButton_2 = QPushButton(self.p4_bottom_frame)
         self.pushButton_2.setObjectName(u"pushButton_2")
@@ -955,6 +987,7 @@ class Ui_MainWindow(object):
         self.replay_button_2.setText("")
         self.pause_button_2.setText("")
         self.play_button_2.setText("")
+        self.changeCamButton.setText(QCoreApplication.translate("Horus", u"Change Camera", None))
         self.pushButton_2.setText("")
         self.back_button_5.setText("")
         self.upload_button_2.setText("")

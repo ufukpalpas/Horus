@@ -1,5 +1,6 @@
 import sys
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from ui_interface import *
 from PyQt5 import QtGui
 from qt_material import *
