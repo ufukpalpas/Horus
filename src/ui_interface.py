@@ -45,12 +45,16 @@ class Ui_MainWindow(object):
     def on_click_list_analyses(self):
         self.stackedWidget.setCurrentIndex(9)
     def on_click_crowd_control(self):
+        self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(8)
+
     def on_click_crowd_control_run(self):
         self.stackedWidget.setCurrentIndex(3)
     def on_click_deception_detection(self):
+        self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(4)
     def on_click_screen_capture(self):
+        self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(5)   
     def on_click_goto_result(self):
         self.stackedWidget.setCurrentIndex(6)
@@ -446,8 +450,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_14.addWidget(self.p4_middle_frame, 1, 0, 1, 1)
 
-        self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
-
         self.stackedWidget.addWidget(self.page_4)
         self.page_5 = QWidget()
         self.page_5.setObjectName(u"page_5")
@@ -515,8 +517,6 @@ class Ui_MainWindow(object):
         self.screenlayout3.addWidget(self.p5_screen_label, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.gridLayout_15.addWidget(self.p5_middle_frame, 1, 0, 1, 1)
-
-        self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
 
         self.stackedWidget.addWidget(self.page_5)
         self.page_21 = QWidget()
@@ -618,8 +618,6 @@ class Ui_MainWindow(object):
         self.screenlayout4.addWidget(self.p21_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)
 
         self.gridLayout_16.addWidget(self.p21_middle_frame, 1, 0, 1, 1)
-
-        self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
 
         self.stackedWidget.addWidget(self.page_21)
         self.page_22 = QWidget()
