@@ -154,7 +154,7 @@ class VideoThread(QThread):
                 gray_image= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 
                 net = cv2.dnn.readNetFromCaffe(self.configFile, self.modelFile)
-                blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 117.0, 123.0))
+                blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 117.0, 123.0)) #177
                 net.setInput(blob)
                 faces = net.forward()
                 #faces = self.face_haar_cascade.detectMultiScale(gray_image)
