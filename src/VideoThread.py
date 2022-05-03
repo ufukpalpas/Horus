@@ -19,7 +19,7 @@ class VideoSingleThread(QThread):
         super().__init__()
         self.model = model_from_json(open("model.json", "r").read())
         self.model.load_weights('model.h5')
-        self.face_haar_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt.xml') 
+        #self.face_haar_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt.xml') 
         self.modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
         self.configFile = "deploy.prototxt.txt" 
         self.labelColor = (10, 10, 255)
@@ -88,7 +88,7 @@ class VideoSingleThread(QThread):
                 if self.changePixmap:
                     self.ValChanged.emit(1)
                     self.changePixmap = False
-            cv2.waitKey(1) #kaldır kamera gelince
+            cv2.waitKey(1)
         cap.release()
      
     def pause(self):
@@ -121,7 +121,7 @@ class VideoThread(QThread):
         self.name = name
         self.model = model_from_json(open("model.json", "r").read())
         self.model.load_weights('model.h5')
-        self.face_haar_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt.xml') 
+        #self.face_haar_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt.xml') 
         self.modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
         self.configFile = "deploy.prototxt.txt" 
         self.labelColor = (10, 10, 255)
@@ -265,6 +265,12 @@ class VideoMultiThread():
     
     def getCurrentValChanged(self):
         return self.threads[self.currentThread].ValChanged
+        
+    def pause(self):
+        return self.threads[self.currentThread].pause()
+    
+    def play(self):
+        return self.threads[self.currentThread].play()
 
 class ScreenCaptureThread(QThread):
     ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
@@ -274,7 +280,7 @@ class ScreenCaptureThread(QThread):
         super().__init__()
         self.model = model_from_json(open("model.json", "r").read())
         self.model.load_weights('model.h5')
-        self.face_haar_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt.xml') 
+        #self.face_haar_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt.xml') 
         self.modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
         self.configFile = "deploy.prototxt.txt" 
         self.labelColor = (10, 10, 255)

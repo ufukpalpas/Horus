@@ -36,11 +36,22 @@ class Ui_MainWindow(object):
         self.videoSingleThread.ValChanged.connect(self.CameraCheckSlot)
         self.p3_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png")) #bunu asağıdan aldık buraya koyduk herbirininkini al kendi butonuna koy
     
-    def pauseVidBtn(self):
-        self.videoSingleThread.pause()
+    def pauseVidBtn(self, sender):
+        if sender == "pause_button_2":
+            self.multiThread.pause()
+            self.scanLabelp4.setText(QCoreApplication.translate("Horus", u"PAUSED...", None))
+        elif sender == "pause_button_3":
+            self.videoSingleThread.pause()
+            self.scanLabelp3.setText(QCoreApplication.translate("Horus", u"PAUSED...", None))
         
-    def playVidBtn(self):
-        self.videoSingleThread.play()
+    def playVidBtn(self, sender):
+        if sender == "play_button_2":
+            self.multiThread.play()
+            self.scanLabelp4.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
+        elif sender == "play_button_3":
+            self.videoSingleThread.play()
+            self.scanLabelp3.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
+
     
     def replayVidBtn(self):
         self.videoSingleThread.replay()
@@ -146,7 +157,7 @@ class Ui_MainWindow(object):
                 return(int(camera))        
     
     def on_click_upload(self):
-        self.pauseVidBtn()
+        self.pauseVidBtn("pause_button_3")
         options = QFileDialog.Options()
         filePath, _ = QFileDialog.getOpenFileName(None,"Select Video File", "","Video File (*.mp4 *.avi *.mov *.mpeg *.flv *.wmv)", options=options)
         if filePath != "":
@@ -326,13 +337,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.scanning_label_3 = QTextBrowser(self.p3_bottom_frame)
-        self.scanning_label_3.setObjectName(u"scanning_label_3")
-        self.scanning_label_3.setMinimumSize(QSize(0, 0))
-        self.scanning_label_3.setMaximumSize(QSize(200, 50))
-        self.scanning_label_3.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.scanLabelp3 = QLabel(self.p3_bottom_frame)
+        self.scanLabelp3.setObjectName(u"scanLabelp3")
+        fontscan = QFont()
+        fontscan.setPointSize(16)
+        self.scanLabelp3.setFont(fontscan)
 
-        self.horizontalLayout.addWidget(self.scanning_label_3, 0, Qt.AlignHCenter|Qt.AlignBottom)
+        self.horizontalLayout.addWidget(self.scanLabelp3, 0, Qt.AlignHCenter)
 
         self.replay_button_3 = QPushButton(self.p3_bottom_frame)
         self.replay_button_3.setObjectName(u"replay_button_3")
@@ -346,14 +357,14 @@ class Ui_MainWindow(object):
         self.pause_button_3.setObjectName(u"pause_button_3")
         self.pause_button_3.setMinimumSize(QSize(50, 50))
         self.pause_button_3.setStyleSheet(u"border-image: url(:/Horus Main Page/stop.png);")
-        self.pause_button_3.clicked.connect(self.pauseVidBtn)
+        self.pause_button_3.clicked.connect(partial(self.pauseVidBtn, "pause_button_3"))
 
         self.horizontalLayout.addWidget(self.pause_button_3, 0, Qt.AlignHCenter|Qt.AlignBottom)
         self.play_button_3 = QPushButton(self.p3_bottom_frame)
         self.play_button_3.setObjectName(u"play_button_3")
         self.play_button_3.setMinimumSize(QSize(50, 50))
         self.play_button_3.setStyleSheet(u"border-image: url(:/Horus Main Page/play.png);")
-        self.play_button_3.clicked.connect(self.playVidBtn)
+        self.play_button_3.clicked.connect(partial(self.playVidBtn, "play_button_3"))
 
         self.horizontalLayout.addWidget(self.play_button_3, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -437,12 +448,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
         
-        self.scanning_label_2 = QTextBrowser(self.p4_bottom_frame)
-        self.scanning_label_2.setObjectName(u"scanning_label_2")
-        self.scanning_label_2.setMaximumSize(QSize(200, 50))
-        self.scanning_label_2.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.scanLabelp4 = QLabel(self.p4_bottom_frame)
+        self.scanLabelp4.setObjectName(u"scanLabelp4")
+        self.scanLabelp4.setFont(fontscan)
 
-        self.horizontalLayout_6.addWidget(self.scanning_label_2, 0, Qt.AlignHCenter|Qt.AlignBottom)
+        self.horizontalLayout_6.addWidget(self.scanLabelp4, 0, Qt.AlignHCenter)
 
         self.replay_button_2 = QPushButton(self.p4_bottom_frame)
         self.replay_button_2.setObjectName(u"replay_button_2")
@@ -455,6 +465,7 @@ class Ui_MainWindow(object):
         self.pause_button_2.setObjectName(u"pause_button_2")
         self.pause_button_2.setMinimumSize(QSize(50, 50))
         self.pause_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/stop.png);")
+        self.pause_button_2.clicked.connect(partial(self.pauseVidBtn, "pause_button_2"))
 
         self.horizontalLayout_6.addWidget(self.pause_button_2, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -462,12 +473,15 @@ class Ui_MainWindow(object):
         self.play_button_2.setObjectName(u"play_button_2")
         self.play_button_2.setMinimumSize(QSize(50, 50))
         self.play_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/play.png);")
+        self.play_button_2.clicked.connect(partial(self.playVidBtn, "play_button_2"))
         
         self.horizontalLayout_6.addWidget(self.play_button_2, 0, Qt.AlignHCenter|Qt.AlignBottom)
         
         self.changeCamButton = QPushButton(self.p4_bottom_frame)
         self.changeCamButton.setObjectName(u"changeCamButton")
-
+        fontCam = QFont()
+        fontCam.setPointSize(12)
+        self.changeCamButton.setFont(fontCam)
         self.horizontalLayout_6.addWidget(self.changeCamButton)
 
         self.changeCamButton.clicked.connect(self.on_click_change_cam)
@@ -974,11 +988,7 @@ class Ui_MainWindow(object):
         self.list_analysis_button.setText("")
         self.horus_image_label.setText("")
         self.choose_mode_label.setText("")
-        self.scanning_label_3.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">SCANNING...</span></p></body></html>", None))
+        self.scanLabelp3.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
         self.replay_button_3.setText("")
         self.pause_button_3.setText("")
         self.play_button_3.setText("")
@@ -986,11 +996,7 @@ class Ui_MainWindow(object):
         self.back_button_6.setText("")
         self.upload_button_3.setText("")
         self.p3_screen_label.setText("")
-        self.scanning_label_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">SCANNING...</span></p></body></html>", None))
+        self.scanLabelp4.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
         self.replay_button_2.setText("")
         self.pause_button_2.setText("")
         self.play_button_2.setText("")
