@@ -292,87 +292,78 @@ class ScreenCaptureThread(QThread):
         #     print("^No camera detected!")
         self.changePixmap = True
         self.pauseVid = False
-        self.replayVid = False
-        self.openVid = False
+        # self.replayVid = False
+        # self.openVid = False
         self.videoPath = None
         
         while self.ThreadActive:
-            if self.replayVid and self.videoPath != None:
-                cap = cv2.VideoCapture(self.videoPath)
-                self.replayVid = False
-            if self.openVid:
-                cap = cv2.VideoCapture(self.videoPath)
-                self.openVid = False
-            if not self.pauseVid:
-                sct = mss()
-                monitor = sct.monitors[0]
+            # if self.replayVid and self.videoPath != None:
+            #     cap = cv2.VideoCapture(self.videoPath)
+            #     self.replayVid = False
+            # if self.openVid:
+            #     cap = cv2.VideoCapture(self.videoPath)
+            #     self.openVid = False
+            sct = mss()
+            monitor = sct.monitors[1]
+                #print(sct.monitors[1])
                 #ret, frame = cap.read()
             
-            if monitor:
-                sct_img = sct.grab(monitor)
-                img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "RGBX")
-                frame = np.array(img)
-                print("t: ", frame.shape)
-                h,w,_ = frame.shape #monitor['height'], monitor['width'] 
-                gray_image= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                
-                net = cv2.dnn.readNetFromCaffe(self.configFile, self.modelFile)
-                blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 117.0, 123.0))
-                net.setInput(blob)
-                faces = net.forward()
-                #faces = self.face_haar_cascade.detectMultiScale(gray_image)
-                try:
-                    for i in range(0, faces.shape[2]):
-                        if self.pauseVid:
-                            break
-                        confidence = faces[0, 0, i, 2]
-                        if confidence > 0.5:
-                            box = faces[0, 0, i, 3:7] * np.array([w, h, w, h])
-                            (x, y, x2, y2) = box.astype("int")
-                            cv2.rectangle(frame, pt1 = (x,y),pt2 = (x2, y2), color = (10,10,255),thickness =  2)
-                            roi_gray = gray_image[y-5:y2+5,x-5:x2+5]
-                            # if roi_gray.shape[1] == 0 or roi_gray.shape[0] == 0:
-                            #     continue
-                            roi_gray=cv2.resize(roi_gray,(48,48))
-                            image_pixels = img_to_array(roi_gray)
-                            image_pixels = np.expand_dims(image_pixels, axis = 0)
-                            image_pixels /= 255
-                            predictions = self.model.predict(image_pixels)
-                            max_index = np.argmax(predictions[0])
-                            emotion_detection = ('Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral')
-                            emotion_prediction = emotion_detection[max_index]
-                            cv2.putText(frame, "{}".format(emotion_prediction), (x2 - int((x2-x)/2) -30,y2+20), cv2.FONT_HERSHEY_SIMPLEX,0.7, self.labelColor,2)
-                except:
-                    pass
-                Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
-                #Image = cv2.resize(Image,(1920,1080))
-                #FlippedImage = cv2.flip(Image, 1)
-                ConvertToQtFormat = QImage(Image_.data, Image_.shape[1], Image_.shape[0], QImage.Format_RGB888)
-                Pic = ConvertToQtFormat.scaled(600,400,Qt.KeepAspectRatio)
+            if monitor: 
                 if not self.pauseVid:
-                    self.ImageUpdate.emit(Pic)
+                    sct_img = sct.grab(monitor)
+                    img = Image.frombytes("RGB", sct_img.size, sct_img.bgra, "raw", "RGBX")
+                    frame = np.array(img)
+                    #print("t: ", frame.shape)
+                    h,w,_ = frame.shape #monitor['height'], monitor['width'] 
+                    gray_image= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    
+                    net = cv2.dnn.readNetFromCaffe(self.configFile, self.modelFile)
+                    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 117.0, 123.0))
+                    net.setInput(blob)
+                    faces = net.forward()
+                    #faces = self.face_haar_cascade.detectMultiScale(gray_image)
+                    try:
+                        for i in range(0, faces.shape[2]):
+                            if self.pauseVid:
+                                break
+                            confidence = faces[0, 0, i, 2]
+                            if confidence > 0.5:
+                                box = faces[0, 0, i, 3:7] * np.array([w, h, w, h])
+                                (x, y, x2, y2) = box.astype("int")
+                                cv2.rectangle(frame, pt1 = (x,y),pt2 = (x2, y2), color = (10,10,255),thickness =  2)
+                                roi_gray = gray_image[y-5:y2+5,x-5:x2+5]
+                                # if roi_gray.shape[1] == 0 or roi_gray.shape[0] == 0:
+                                #     continue
+                                roi_gray=cv2.resize(roi_gray,(48,48))
+                                image_pixels = img_to_array(roi_gray)
+                                image_pixels = np.expand_dims(image_pixels, axis = 0)
+                                image_pixels /= 255
+                                predictions = self.model.predict(image_pixels)
+                                max_index = np.argmax(predictions[0])
+                                emotion_detection = ('Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral')
+                                emotion_prediction = emotion_detection[max_index]
+                                cv2.putText(frame, "{}".format(emotion_prediction), (x2 - int((x2-x)/2) -30,y2+20), cv2.FONT_HERSHEY_SIMPLEX,0.7, self.labelColor,2)
+                    except:
+                        pass
+                    Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
+                    #Image = cv2.resize(Image,(1920,1080))
+                    #FlippedImage = cv2.flip(Image, 1)
+                    ConvertToQtFormat = QImage(Image_.data, Image_.shape[1], Image_.shape[0], QImage.Format_RGB888)
+                    Pic = ConvertToQtFormat.scaled(1280,720,Qt.KeepAspectRatio)
+                    if not self.pauseVid:
+                        self.ImageUpdate.emit(Pic)
             else:
                 if self.changePixmap:
                     self.ValChanged.emit(1)
                     self.changePixmap = False
-            cv2.waitKey(1) #kaldır kamera gelince
-        cap.release()
+            cv2.waitKey(1)
+        #cap.release()
      
     def pause(self):
         self.pauseVid = True
     
     def play(self):
         self.pauseVid = False
-        
-    def replay(self):
-        self.replayVid = True
-        if self.pauseVid:
-            self.pauseVid = False
-    
-    def open(self, path):
-        self.videoPath = path
-        self.openVid = True
-        self.play()
         
     def stop(self):
         self.ThreadActive = False

@@ -470,7 +470,7 @@
           <property name="lineWidth">
            <number>0</number>
           </property>
-          <layout class="QVBoxLayout" name="screenlayout">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -486,7 +486,36 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item alignment="Qt::AlignRight|Qt::AlignVCenter">
+           <item>
+            <widget class="QFrame" name="p3_chart_frame1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>400</height>
+              </size>
+             </property>
+             <property name="baseSize">
+              <size>
+               <width>200</width>
+               <height>500</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_12"/>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignRight">
             <widget class="QLabel" name="p3_screen_label">
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -975,7 +1004,7 @@ p, li { white-space: pre-wrap; }
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
+           <item>
             <widget class="QTextBrowser" name="scanning_label">
              <property name="maximumSize">
               <size>

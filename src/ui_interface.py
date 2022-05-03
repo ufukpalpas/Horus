@@ -18,6 +18,22 @@ from PyQt5.QtWidgets import QFileDialog
 from functools import partial
 import cv2
 import startscreen_rc
+try:
+    from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtGui import QPainter
+    from PyQt5.QtWidgets import QApplication
+except ImportError:
+    from PySide2.QtCore import Qt
+    from PySide2.QtGui import QPainter
+    from PySide2.QtWidgets import QApplication
+    from PySide2.QtCharts import QtCharts
+    QChartView = QtCharts.QChartView
+    QChart = QtCharts.QChart
+    QBarSet = QtCharts.QBarSet
+    QBarSeries = QtCharts.QBarSeries
+    QBarCategoryAxis = QtCharts.QBarCategoryAxis
+
 
 class Ui_MainWindow(object):
         
@@ -37,7 +53,10 @@ class Ui_MainWindow(object):
         self.p3_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png")) #bunu asağıdan aldık buraya koyduk herbirininkini al kendi butonuna koy
     
     def pauseVidBtn(self, sender):
-        if sender == "pause_button_2":
+        if sender == "pause_button":
+            self.screenCapture.pause()
+            self.screenCapScanLabel.setText(QCoreApplication.translate("Horus", u"PAUSED...", None))
+        elif sender == "pause_button_2":
             self.multiThread.pause()
             self.scanLabelp4.setText(QCoreApplication.translate("Horus", u"PAUSED...", None))
         elif sender == "pause_button_3":
@@ -45,7 +64,10 @@ class Ui_MainWindow(object):
             self.scanLabelp3.setText(QCoreApplication.translate("Horus", u"PAUSED...", None))
         
     def playVidBtn(self, sender):
-        if sender == "play_button_2":
+        if sender == "play_button":
+            self.screenCapture.play()
+            self.screenCapScanLabel.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
+        elif sender == "play_button_2":
             self.multiThread.play()
             self.scanLabelp4.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
         elif sender == "play_button_3":
@@ -343,7 +365,7 @@ class Ui_MainWindow(object):
         fontscan.setPointSize(16)
         self.scanLabelp3.setFont(fontscan)
 
-        self.horizontalLayout.addWidget(self.scanLabelp3, 0, Qt.AlignHCenter)
+        self.horizontalLayout.addWidget(self.scanLabelp3, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
         self.replay_button_3 = QPushButton(self.p3_bottom_frame)
         self.replay_button_3.setObjectName(u"replay_button_3")
@@ -452,7 +474,7 @@ class Ui_MainWindow(object):
         self.scanLabelp4.setObjectName(u"scanLabelp4")
         self.scanLabelp4.setFont(fontscan)
 
-        self.horizontalLayout_6.addWidget(self.scanLabelp4, 0, Qt.AlignHCenter)
+        self.horizontalLayout_6.addWidget(self.scanLabelp4, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
         self.replay_button_2 = QPushButton(self.p4_bottom_frame)
         self.replay_button_2.setObjectName(u"replay_button_2")
@@ -631,12 +653,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_8.setSpacing(0)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.scanning_label = QTextBrowser(self.p21_bottom_frame)
-        self.scanning_label.setObjectName(u"scanning_label")
-        self.scanning_label.setMaximumSize(QSize(200, 50))
-        self.scanning_label.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.screenCapScanLabel = QLabel(self.p21_bottom_frame)
+        self.screenCapScanLabel.setObjectName(u"screenCapScanLabel")
+        self.screenCapScanLabel.setFont(fontscan)
 
-        self.horizontalLayout_8.addWidget(self.scanning_label, 0, Qt.AlignHCenter|Qt.AlignBottom)
+        self.horizontalLayout_8.addWidget(self.screenCapScanLabel, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.replay_button = QPushButton(self.p21_bottom_frame)
         self.replay_button.setObjectName(u"replay_button")
@@ -649,6 +670,7 @@ class Ui_MainWindow(object):
         self.pause_button.setObjectName(u"pause_button")
         self.pause_button.setMinimumSize(QSize(50, 50))
         self.pause_button.setStyleSheet(u"border-image: url(:/Horus Main Page/stop.png);")
+        self.pause_button.clicked.connect(partial(self.pauseVidBtn, "pause_button"))
 
         self.horizontalLayout_8.addWidget(self.pause_button, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -656,6 +678,7 @@ class Ui_MainWindow(object):
         self.play_button.setObjectName(u"play_button")
         self.play_button.setMinimumSize(QSize(50, 50))
         self.play_button.setStyleSheet(u"border-image: url(:/Horus Main Page/play.png);")
+        self.play_button.clicked.connect(partial(self.playVidBtn, "play_button"))
 
         self.horizontalLayout_8.addWidget(self.play_button, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -1012,11 +1035,7 @@ class Ui_MainWindow(object):
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">STAND STILL...</span></p></body></html>", None))
         self.back_button_4.setText("")
         self.p5_screen_label.setText("")
-        self.scanning_label.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">SCANNING...</span></p></body></html>", None))
+        self.screenCapScanLabel.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
         self.replay_button.setText("")
         self.pause_button.setText("")
         self.play_button.setText("")
@@ -1047,4 +1066,3 @@ class Ui_MainWindow(object):
         self.back_button_7.setText("")
         self.label.setText("")
     # retranslateUi
-
