@@ -14,6 +14,7 @@ from mss import mss
 class VideoSingleThread(QThread):
     ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
     ValChanged = pyqtSignal(int) #camera check forward
+    Analysis = pyqtSignal(list) #List of analysis of emotions
     
     def __init__(self):
         super().__init__()
@@ -23,6 +24,15 @@ class VideoSingleThread(QThread):
         self.modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
         self.configFile = "deploy.prototxt.txt" 
         self.labelColor = (10, 10, 255)
+        self.average_emotions = np.zeros(7, dtype=int)
+#        self.average_emotions[0] = 0 #Angry
+#        self.average_emotions[1] = 0 #Disgust
+#        self.average_emotions[2] = 0 #Fear
+#        self.average_emotions[3] = 0 #Happy
+#        self.average_emotions[4] = 0 #Sad
+#        self.average_emotions[5] = 0 #Surprised
+#        self.average_emotions[6] = 0 #Neutral
+        self.captured_emotions = self.average_emotions.copy()
     
     def run(self):
         self.ThreadActive = True
@@ -34,6 +44,7 @@ class VideoSingleThread(QThread):
         self.replayVid = False
         self.openVid = False
         self.videoPath = None
+        maxed_emotion = 'Neutral'
         
         while self.ThreadActive:
             if self.replayVid and self.videoPath != None:
@@ -54,6 +65,7 @@ class VideoSingleThread(QThread):
                 net.setInput(blob)
                 faces = net.forward()
                 #faces = self.face_haar_cascade.detectMultiScale(gray_image)
+                self.captured_emotions = np.zeros(7, dtype=int)
                 try:
                     for i in range(0, faces.shape[2]):
                         if self.pauseVid:
@@ -74,9 +86,50 @@ class VideoSingleThread(QThread):
                             max_index = np.argmax(predictions[0])
                             emotion_detection = ('Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral')
                             emotion_prediction = emotion_detection[max_index]
+                            if emotion_prediction == 'Angry':
+                                self.captured_emotions[0] +=1
+                            elif emotion_prediction == 'Disgust':
+                                self.captured_emotions[1] +=1
+                            elif emotion_prediction == 'Fear':
+                                self.captured_emotions[2] +=1
+                            elif emotion_prediction == 'Happy':
+                                self.captured_emotions[3] +=1
+                            elif emotion_prediction == 'Sad':
+                                self.captured_emotions[4] +=1
+                            elif emotion_prediction == 'Surprised':
+                                self.captured_emotions[5] +=1
+                            elif emotion_prediction == 'Neutral':
+                                self.captured_emotions[6] +=1
                             cv2.putText(frame, "{}".format(emotion_prediction), (x2 - int((x2-x)/2) -30,y2+20), cv2.FONT_HERSHEY_SIMPLEX,0.7, self.labelColor,2)
                 except:
                     pass
+                max_ind = np.argmax(self.captured_emotions)
+                average_emotion = 0
+                if self.captured_emotions[max_ind] != 0:
+                    if max_ind == 0:
+                        self.average_emotions[0] +=1
+                        maxed_emotion = 'Angry'
+                    elif max_ind == 1:
+                        self.average_emotions[1] +=1
+                        maxed_emotion = 'Disgust'
+                    elif max_ind == 2:
+                        self.average_emotions[2] +=1
+                        maxed_emotion = 'Fear'
+                    elif max_ind == 3:
+                        self.average_emotions[3] +=1
+                        maxed_emotion = 'Happy'
+                    elif max_ind == 4:
+                        self.average_emotions[4] +=1
+                        maxed_emotion = 'Sad'
+                    elif max_ind == 5:
+                        self.average_emotions[5] +=1
+                        maxed_emotion = 'Surprised'
+                    elif max_ind == 6:
+                        self.average_emotions[6] +=1
+                        maxed_emotion = 'Neutral'
+                    average_emotion = self.captured_emotions[max_ind]/ np.sum(self.captured_emotions)
+                    #print("av: ", self.average_emotions)
+                #print("cap: ", maxed_emotion, " with ac: ", average_emotion)
                 Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
                 #Image = cv2.resize(Image,(1920,1080))
                 #FlippedImage = cv2.flip(Image, 1)
@@ -109,6 +162,8 @@ class VideoSingleThread(QThread):
         
     def stop(self):
         self.ThreadActive = False
+        analysis = list(self.average_emotions/ np.sum(self.average_emotions))
+        self.Analysis.emit(analysis)
         self.quit()
 
 class VideoThread(QThread):
@@ -275,6 +330,7 @@ class VideoMultiThread():
 class ScreenCaptureThread(QThread):
     ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
     ValChanged = pyqtSignal(int) #camera check forward
+    Analysis = pyqtSignal(list) #list of analysis of emotions
     
     def __init__(self):
         super().__init__()
@@ -284,6 +340,15 @@ class ScreenCaptureThread(QThread):
         self.modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
         self.configFile = "deploy.prototxt.txt" 
         self.labelColor = (10, 10, 255)
+        self.average_emotions = np.zeros(7, dtype=int)
+#        self.average_emotions[0] = 0 #Angry
+#        self.average_emotions[1] = 0 #Disgust
+#        self.average_emotions[2] = 0 #Fear
+#        self.average_emotions[3] = 0 #Happy
+#        self.average_emotions[4] = 0 #Sad
+#        self.average_emotions[5] = 0 #Surprised
+#        self.average_emotions[6] = 0 #Neutral
+        self.captured_emotions = self.average_emotions.copy()
     
     def run(self):
         self.ThreadActive = True
@@ -295,7 +360,7 @@ class ScreenCaptureThread(QThread):
         # self.replayVid = False
         # self.openVid = False
         self.videoPath = None
-        
+        maxed_emotion = 'Neutral'
         while self.ThreadActive:
             # if self.replayVid and self.videoPath != None:
             #     cap = cv2.VideoCapture(self.videoPath)
@@ -321,6 +386,7 @@ class ScreenCaptureThread(QThread):
                     blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 117.0, 123.0))
                     net.setInput(blob)
                     faces = net.forward()
+                    self.captured_emotions = np.zeros(7, dtype=int)
                     #faces = self.face_haar_cascade.detectMultiScale(gray_image)
                     try:
                         for i in range(0, faces.shape[2]):
@@ -342,9 +408,50 @@ class ScreenCaptureThread(QThread):
                                 max_index = np.argmax(predictions[0])
                                 emotion_detection = ('Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral')
                                 emotion_prediction = emotion_detection[max_index]
+                                if emotion_prediction == 'Angry':
+                                    self.captured_emotions[0] +=1
+                                elif emotion_prediction == 'Disgust':
+                                    self.captured_emotions[1] +=1
+                                elif emotion_prediction == 'Fear':
+                                    self.captured_emotions[2] +=1
+                                elif emotion_prediction == 'Happy':
+                                    self.captured_emotions[3] +=1
+                                elif emotion_prediction == 'Sad':
+                                    self.captured_emotions[4] +=1
+                                elif emotion_prediction == 'Surprised':
+                                    self.captured_emotions[5] +=1
+                                elif emotion_prediction == 'Neutral':
+                                    self.captured_emotions[6] +=1
                                 cv2.putText(frame, "{}".format(emotion_prediction), (x2 - int((x2-x)/2) -30,y2+20), cv2.FONT_HERSHEY_SIMPLEX,0.7, self.labelColor,2)
                     except:
                         pass
+                    max_ind = np.argmax(self.captured_emotions)
+                    average_emotion = 0
+                    if self.captured_emotions[max_ind] != 0:
+                        if max_ind == 0:
+                            self.average_emotions[0] +=1
+                            maxed_emotion = 'Angry'
+                        elif max_ind == 1:
+                            self.average_emotions[1] +=1
+                            maxed_emotion = 'Disgust'
+                        elif max_ind == 2:
+                            self.average_emotions[2] +=1
+                            maxed_emotion = 'Fear'
+                        elif max_ind == 3:
+                            self.average_emotions[3] +=1
+                            maxed_emotion = 'Happy'
+                        elif max_ind == 4:
+                            self.average_emotions[4] +=1
+                            maxed_emotion = 'Sad'
+                        elif max_ind == 5:
+                            self.average_emotions[5] +=1
+                            maxed_emotion = 'Surprised'
+                        elif max_ind == 6:
+                            self.average_emotions[6] +=1
+                            maxed_emotion = 'Neutral'
+                        average_emotion = self.captured_emotions[max_ind]/ np.sum(self.captured_emotions)
+                        #print("av: ", self.average_emotions)
+                    #print("cap: ", maxed_emotion, " with ac: ", average_emotion)
                     Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
                     #Image = cv2.resize(Image,(1920,1080))
                     #FlippedImage = cv2.flip(Image, 1)
@@ -367,6 +474,8 @@ class ScreenCaptureThread(QThread):
         
     def stop(self):
         self.ThreadActive = False
+        analysis = list(self.average_emotions/ np.sum(self.average_emotions))
+        self.Analysis.emit(analysis)
         self.quit()
 
 class LieDetectionThread(QThread): #ilk baştaki yeterse yapma bunu ilerleyen zamanda bak
