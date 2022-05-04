@@ -52,6 +52,8 @@ class Ui_MainWindow(object):
                 self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
             except:
                 pass
+        elif sender == "back_button_3":
+            self.screenCapture.stop()
         
     def on_click_single_user(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -60,6 +62,7 @@ class Ui_MainWindow(object):
         self.videoSingleThread.ImageUpdate.connect(self.ImageUpdateSlot)
         self.videoSingleThread.ValChanged.connect(self.CameraCheckSlot)
         self.videoSingleThread.EmotionUpdate.connect(self.EmotionSlot)
+        self.videoSingleThread.Analysis.connect(self.AnalysisSlot_2)
         self.p3_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png")) #bunu asağıdan aldık buraya koyduk herbirininkini al kendi butonuna koy
     
     def pauseVidBtn(self, sender):
@@ -145,6 +148,7 @@ class Ui_MainWindow(object):
             self.multiThread.startThreads()
             self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
             self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)#   ValChanged.connect(self.CameraCheckSlot)
+            self.multiThread.Analysis.connect(self.AnalysisSlot_3)
             self.stackedWidget.setCurrentIndex(3)
             self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         else:
@@ -157,11 +161,24 @@ class Ui_MainWindow(object):
         self.screenCapture.start()
         self.screenCapture.ImageUpdate.connect(self.ImageUpdateSlot_3)
         self.screenCapture.ValChanged.connect(self.CameraCheckSlot)
+        self.screenCapture.Analysis.connect(self.AnalysisSlot)
         self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(5)   
     def on_click_goto_result(self):
         self.stackedWidget.setCurrentIndex(6)
+    
+    def AnalysisSlot(self, anal):
+        self.analysis_screen = anal
+        print("last analy: ", self.analysis_screen)
         
+    def AnalysisSlot_2(self, anal):
+        self.analysis_single = anal
+        print("last analy: ", self.analysis_single)
+    
+    def AnalysisSlot_3(self, anal):
+        self.analysis_multi = anal
+        print("last analysis from multi thread: ", self.analysis_multi) 
+     
     def ImageUpdateSlot(self, Image):
         self.p3_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
 
