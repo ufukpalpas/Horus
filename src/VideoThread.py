@@ -651,7 +651,7 @@ class LieDetectionThread(QThread):
                     continue
                 count = [0,0,0,0,0,0,0]
                 average = [0,0,0,0,0,0,0]
-                print("x", x)
+                #print("x", x)
                 for y in range(5):
                     w = x - 2
                     if self.frameResults[y + w][0] == "Angry":
@@ -695,9 +695,9 @@ class LieDetectionThread(QThread):
                     counterEmo = 1
                 else:
                     counterEmo += 1   
-                print(counterEmo)  
+                #print(counterEmo)  
             countAgain.append(counterEmo)       
-            print(countAgain)
+            #print(countAgain)
             for x in countAgain:
                 if x > 8:
                     countAgainTrimed.append(x)

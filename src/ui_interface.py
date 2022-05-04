@@ -8,6 +8,7 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 from msilib.schema import ListView
+from lie import DeceptionDetectionVoice
 from VideoThread import ScreenCaptureThread, VideoMultiThread, VideoSingleThread, LieDetectionThread
 import PyQt5
 from PyQt5 import QtTest
@@ -38,6 +39,9 @@ except ImportError:
 
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.voicePreds = None
+        self.decVidResult = None
         
     def on_click_to_menu(self, sender):
         self.stackedWidget.setCurrentIndex(1)
@@ -48,6 +52,7 @@ class Ui_MainWindow(object):
         elif sender == "back_button_4":
             try: 
                 self.deceptionThread.stop()
+                self.deceptionDetectionVoice.stop()
                 self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
                 self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
             except:
@@ -205,7 +210,26 @@ class Ui_MainWindow(object):
         else:
             angry, disgust, fear, happy, sad, suprised, neutral = emotion[0][0],emotion[0][1],emotion[0][2],emotion[0][3],emotion[0][4],emotion[0][5],emotion[0][6]
             self.updateBarChart(self.seriesBarSingle, happy, sad, disgust, angry, neutral, suprised, fear)
+            
+    def EmotionSlot_deception(self, decVidResult):
+        self.decVidResult = decVidResult
+        print(self.decVidResult)
+        self.finishDeceptionControl()
         
+    def VoiceUpdateSlot(self, voicePreds):
+        self.voicePreds = voicePreds
+        print(self.voicePreds)
+        self.finishDeceptionControl()
+    
+    def finishDeceptionControl(self):
+        if self.decVidResult != None and self.voicePreds != None:
+            contrib = 0.2 if self.decVidResult else 0 #May change the coef
+            lie = True if (self.voicePreds[0][0][1] * 0.80 + contrib) >= 0.70 else False
+            if lie:
+                self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/lie.png"))
+            else:
+                self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/truth.png"))
+            self.detectionStartButton.setEnabled(True)
     def countCameras(self):
         camera = 0
         while True:
@@ -227,15 +251,18 @@ class Ui_MainWindow(object):
         self.deceptionThread.start()
         self.deceptionThread.ImageUpdate.connect(self.ImageUpdateSlot_dec)
         self.deceptionThread.ValChanged.connect(self.CameraCheckSlot)
-        #self.deceptionThread.EmotionUpdate.connect(self.EmotionSlot)
-        t = 28
+        self.deceptionThread.EmotionUpdate.connect(self.EmotionSlot_deception)
+        self.deceptionDetectionVoice = DeceptionDetectionVoice()
+        self.deceptionDetectionVoice.start()
+        self.deceptionDetectionVoice.LieVoiceResult.connect(self.VoiceUpdateSlot)
+        # t = 28
         self.detectionStartButton.setEnabled(False)
         self.detectionLabel.setText(QCoreApplication.translate("Horus", u"Stand Still...", None))
-        while t:
-            QtTest.QTest.qWait(1000)
-            self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u""+ str(t), None))
-            self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u""+ str(t), None))
-            t -= 1
+        # while t:
+        #     QtTest.QTest.qWait(1000)   u""+ str(t)
+        self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u"Listening|Recording", None))
+        self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"Listening|Recording", None))
+            # t -= 1
     
     def drawBarChart(self):
         set0 = QBarSet("Happy")
@@ -1231,9 +1258,9 @@ class Ui_MainWindow(object):
         self.detectionLabel.setText(QCoreApplication.translate("Horus", u"Click Start Button to Continue", None))
         self.back_button_4.setText("")
         self.detectionStartButton.setText(QCoreApplication.translate("Horus", u"Start Detection", None))
-        self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
+        self.leftCounterLabel.setText("")
         self.p5_screen_label.setText("")
-        self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
+        self.rightCounterLabel.setText("")
         self.screenCapScanLabel.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
         self.replay_button.setText("")
         self.pause_button.setText("")
