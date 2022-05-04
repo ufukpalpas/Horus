@@ -30,7 +30,7 @@
        <string notr="true">border-image: url(:/Horus Main Page/startscreen.jpg);</string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -1664,6 +1664,8 @@ p, li { white-space: pre-wrap; }
  </widget>
  <resources>
   <include location="ui_img/ui_img/startscreen.qrc"/>
+  <include location="ui_img/ui_img/startscreen.qrc"/>
+  <include location="../../../../.designer/backup/ui_img/ui_img/startscreen.qrc"/>
  </resources>
  <connections/>
 </ui>

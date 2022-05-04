@@ -19,7 +19,7 @@ from functools import partial
 import cv2
 import startscreen_rc
 try:
-    from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis
+    from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis, QPercentBarSeries, QPieSeries
     from PyQt5.QtCore import Qt
     from PyQt5.QtGui import QPainter
     from PyQt5.QtWidgets import QApplication
@@ -50,6 +50,7 @@ class Ui_MainWindow(object):
         self.videoSingleThread.start()
         self.videoSingleThread.ImageUpdate.connect(self.ImageUpdateSlot)
         self.videoSingleThread.ValChanged.connect(self.CameraCheckSlot)
+        self.videoSingleThread.EmotionUpdate.connect(self.EmotionSlot)
         self.p3_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png")) #bunu asağıdan aldık buraya koyduk herbirininkini al kendi butonuna koy
     
     def pauseVidBtn(self, sender):
@@ -73,9 +74,9 @@ class Ui_MainWindow(object):
         elif sender == "play_button_3":
             self.videoSingleThread.play()
             self.scanLabelp3.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
-
     
     def replayVidBtn(self):
+        self.scanLabelp3.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
         self.videoSingleThread.replay()
     
     def on_click_list_analyses(self):
@@ -169,6 +170,13 @@ class Ui_MainWindow(object):
         self.p5_screen_label.setPixmap(QPixmap(stt))
         self.p21_screen_label.setPixmap(QPixmap(stt))
         
+    def EmotionSlot(self, emotion):
+        if len(emotion) == 0:
+            angry, disgust, fear, happy, sad, suprised, neutral = 0,0,0,0,0,0,0
+        else:
+            angry, disgust, fear, happy, sad, suprised, neutral = emotion[0][0],emotion[0][1],emotion[0][2],emotion[0][3],emotion[0][4],emotion[0][5],emotion[0][6]
+            self.updateBarChart(self.seriesBarSingle, happy, sad, disgust, angry, neutral, suprised, fear)
+        
     def countCameras(self):
         camera = 0
         while True:
@@ -184,6 +192,111 @@ class Ui_MainWindow(object):
         filePath, _ = QFileDialog.getOpenFileName(None,"Select Video File", "","Video File (*.mp4 *.avi *.mov *.mpeg *.flv *.wmv)", options=options)
         if filePath != "":
             self.videoSingleThread.open(filePath)
+    
+    def drawBarChart(self):
+        set0 = QBarSet("Happy")
+        set1 = QBarSet('Sad')
+        set2 = QBarSet('Disgust')
+        set3 = QBarSet('Angry')
+        set4 = QBarSet('Neutral')
+        set5 = QBarSet('Suprised')
+        set6 = QBarSet('Fear')
+        
+        set0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+        set1 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+        set2 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+        set3 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+        set4 << 0 << 0 << 0 << 0 << 100 << 0 << 0
+        set5 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+        set6 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+        
+        series = QBarSeries()
+        series.append(set0)
+        series.append(set1)
+        series.append(set2)
+        series.append(set3)
+        series.append(set4)
+        series.append(set5)
+        series.append(set6)
+        
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle("Emotions Pie Chart")
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        chart.setTheme(QChart.ChartThemeDark)
+        categories = ["Happy", "Sad", "Disgust", "Angry", "Neutral", "Suprised", "Fear"]
+        axis = QBarCategoryAxis()
+        axis.append(categories)
+        chart.createDefaultAxes()
+        chart.setAxisX(axis, series)
+        chartview = QChartView(chart)
+        chartview.setMinimumHeight(500)
+        chartview.setMinimumWidth(600)
+        return chartview, series
+    
+    
+    def drawPieChart(self):
+        series = QPieSeries()
+        series.append("Happy", 0)
+        series.setPieSize(1.0)
+        
+        #slice = series.append("Happy", 50)
+        #slice.setExploded(True)
+        #slice.setLabelVisible(True)
+        
+        series.append("Sad", 0)
+        series.append("Disgust", 0)
+        series.append("Anger", 0)
+        series.append("Neutral", 0)
+        series.append("Suprised", 0)
+        series.append("Fear", 0)
+        
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle("Emotions Pie Chart")
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        chart.setTheme(QChart.ChartThemeDark)
+        chart.setBackgroundBrush(QBrush(QColor("transparent")))
+        chartview = QChartView(chart)
+        chartview.setMinimumHeight(500)
+        chartview.setMinimumWidth(600)
+        return chartview, series
+    
+    def updatePieChart(self, series, happy, sad, disgust, anger, neutral, suprised, fear):
+        series.clear()
+        series.append("Happy", happy)
+        series.append("Sad", sad)
+        series.append("Disgust", disgust)
+        series.append("Anger", anger)
+        series.append("Neutral", neutral)
+        series.append("Suprised", suprised)
+        series.append("Fear", fear)
+    
+    def updateBarChart(self, series, happy, sad, disgust, anger, neutral, suprised, fear):
+        series.clear()
+        set0 = QBarSet("Happy")
+        set1 = QBarSet('Sad')
+        set2 = QBarSet('Disgust')
+        set3 = QBarSet('Angry')
+        set4 = QBarSet('Neutral')
+        set5 = QBarSet('Suprised')
+        set6 = QBarSet('Fear')
+        
+        set0 << (happy) << 0 << 0 << 0 << 0 << 0 << 0
+        set1 << 0 << (sad) << 0 << 0 << 0 << 0 << 0
+        set2 << 0 << 0 << (disgust) << 0 << 0 << 0 << 0
+        set3 << 0 << 0 << 0 << (anger) << 0 << 0 << 0
+        set4 << 0 << 0 << 0 << 0 << (neutral) << 0 << 0
+        set5 << 0 << 0 << 0 << 0 << 0 << (suprised) << 0
+        set6 << 0 << 0 << 0 << 0 << 0 << 0 << (fear)
+        
+        series.append(set0)
+        series.append(set1)
+        series.append(set2)
+        series.append(set3)
+        series.append(set4)
+        series.append(set5)
+        series.append(set6)
     
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -430,15 +543,27 @@ class Ui_MainWindow(object):
 
 
         self.gridLayout_4.addWidget(self.p3_top_frame, 0, 0, 1, 1)
+        
+        self.chartViewBarSingle, self.seriesBarSingle = self.drawBarChart()
 
         self.p3_middle_frame = QFrame(self.page_3)
         self.p3_middle_frame.setObjectName(u"p3_middle_frame")
         self.p3_middle_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p3_middle_frame.setLineWidth(0)
-        self.screenlayout = QVBoxLayout(self.p3_middle_frame)
+        self.screenlayout = QHBoxLayout(self.p3_middle_frame)
         self.screenlayout.setSpacing(0)
         self.screenlayout.setObjectName(u"screenlayout")
         self.screenlayout.setContentsMargins(0, 0, 0, 0)
+        
+        self.p3_chart_frame1 = QFrame(self.p3_middle_frame)
+        self.p3_chart_frame1.setObjectName(u"p3_chart_frame1")
+        self.p3_chart_frame1.setFrameShape(QFrame.StyledPanel)
+        self.p3_chart_frame1.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_12 = QVBoxLayout(self.p3_chart_frame1)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+
+        self.screenlayout.addWidget(self.p3_chart_frame1)
+        
         self.p3_screen_label = QLabel(self.p3_middle_frame)
         self.p3_screen_label.setObjectName(u"p3_screen_label")
         sizePolicy1 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
@@ -447,7 +572,9 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.p3_screen_label.sizePolicy().hasHeightForWidth())
         self.p3_screen_label.setSizePolicy(sizePolicy1)
 
+        self.verticalLayout_12.addWidget(self.chartViewBarSingle, 0, Qt.AlignHCenter|Qt.AlignVCenter)
         self.screenlayout.addWidget(self.p3_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)#Qt.AlignHCenter|Qt.AlignVCenter
+        
         self.gridLayout_4.addWidget(self.p3_middle_frame, 1, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_3)

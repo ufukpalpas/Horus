@@ -10,10 +10,12 @@ import time
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.preprocessing.image import img_to_array
 from mss import mss
+import collections
 
 class VideoSingleThread(QThread):
     ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
     ValChanged = pyqtSignal(int) #camera check forward
+    EmotionUpdate = pyqtSignal(list) #emotions to charts
     
     def __init__(self):
         super().__init__()
@@ -23,6 +25,7 @@ class VideoSingleThread(QThread):
         self.modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
         self.configFile = "deploy.prototxt.txt" 
         self.labelColor = (10, 10, 255)
+        self.emitEmoSpeed = 4
     
     def run(self):
         self.ThreadActive = True
@@ -34,7 +37,8 @@ class VideoSingleThread(QThread):
         self.replayVid = False
         self.openVid = False
         self.videoPath = None
-        
+        emotions = []
+        emotionsPast = [[]]
         while self.ThreadActive:
             if self.replayVid and self.videoPath != None:
                 cap = cv2.VideoCapture(self.videoPath)
@@ -75,6 +79,9 @@ class VideoSingleThread(QThread):
                             emotion_detection = ('Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral')
                             emotion_prediction = emotion_detection[max_index]
                             cv2.putText(frame, "{}".format(emotion_prediction), (x2 - int((x2-x)/2) -30,y2+20), cv2.FONT_HERSHEY_SIMPLEX,0.7, self.labelColor,2)
+                            #lable_violation = 'Confidence: {}'.format(str(np.round(np.max(predictions[0])*100,1))+ "%")
+                            emotions = list(np.round(predictions*100))
+                            ##print(str(np.round(predictions*100)))
                 except:
                     pass
                 Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
@@ -84,6 +91,13 @@ class VideoSingleThread(QThread):
                 Pic = ConvertToQtFormat.scaled(1920,1080,Qt.KeepAspectRatio)
                 if not self.pauseVid:
                     self.ImageUpdate.emit(Pic)
+                    if len(emotions) != 0 and collections.Counter(emotionsPast[0]) != collections.Counter(emotions[0]):
+                        print(emotions)
+                        self.emitEmoSpeed -= 1
+                        if self.emitEmoSpeed == 0:
+                            self.EmotionUpdate.emit(emotions)
+                            emotionsPast = emotions
+                            self.emitEmoSpeed = 8
             else:
                 if self.changePixmap:
                     self.ValChanged.emit(1)
