@@ -345,6 +345,9 @@ class VideoMultiThread(QThread):
         self.camerInds = cameraInds
         self.threadCount = len(cameraInds)
         self.currentThread = 0
+        self.analysis_array = []
+        self.analysis_result = []
+        
     def startThreads(self):
         self.threads = []
         for i in range(self.threadCount):
@@ -372,9 +375,12 @@ class VideoMultiThread(QThread):
     def stop_threads(self):
         for i in range(self.threadCount):
             self.threads[i].stop()
+        self.analysis_result = np.sum(self.analysis_array, axis=0) / len(self.analysis_array)
+        self.Analysis.emit(list(self.analysis_result))
     
     def get_analysis(self, anal):
         print("Analysis received from ", self.sender().name, " : ", anal)
+        self.analysis_array.append(anal)
     
     def getCurrentImageUpdate(self):
         print("THREADASDAS ", self.currentThread)

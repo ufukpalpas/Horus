@@ -167,7 +167,7 @@ class Ui_MainWindow(object):
     
     def AnalysisSlot_3(self, anal):
         self.analysis_multi = anal
-        print("last analy: ", self.analysis_multi) 
+        print("last analysis from multi thread: ", self.analysis_multi) 
      
     def ImageUpdateSlot(self, Image):
         self.p3_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
