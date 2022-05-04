@@ -383,7 +383,195 @@ class ScreenCaptureThread(QThread):
         self.ThreadActive = False
         self.quit()
 
-class LieDetectionThread(QThread): #ilk baştaki yeterse yapma bunu ilerleyen zamanda bak
-    pass 
+class LieDetectionThread(QThread):
+    ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
+    ValChanged = pyqtSignal(int) #camera check forward
+    EmotionUpdate = pyqtSignal(list) #emotions to charts
+    
+    def __init__(self):
+        super().__init__()
+        self.model = model_from_json(open("model.json", "r").read())
+        self.model.load_weights('model.h5')
+        self.modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
+        self.configFile = "deploy.prototxt.txt" 
+        self.labelColor = (10, 10, 255)
+        self.frameResults = []
+        self.filteredResults = []
+        
+    def run(self):
+        cap = cv2.VideoCapture(0)
+        self.ThreadActive = True
+        self.changePixmap = True
+        # Define the codec and create VideoWriter object
+        #fourcc = cv2.VideoWriter_fourcc('X','V','I','D') #(*'MP42')
+        #videoWriter = cv2.VideoWriter('video.avi', fourcc, 30.0, (640, 480))
+        a = 0
+        while self.ThreadActive:
+            ret, frame = cap.read()
+            if ret:
+                #frame = cv2.resize(frame, (640, 480))
+                #videoWriter.write(frame)
+                h,w,_ = frame.shape
+                gray_image= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                
+                net = cv2.dnn.readNetFromCaffe(self.configFile, self.modelFile)
+                blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 117.0, 123.0))
+                net.setInput(blob)
+                faces = net.forward()
+                try:
+                    for i in range(0, faces.shape[2]):
+                        confidence = faces[0, 0, i, 2]
+                        if confidence > 0.5:
+                            box = faces[0, 0, i, 3:7] * np.array([w, h, w, h])
+                            (x, y, x2, y2) = box.astype("int")
+                            cv2.rectangle(frame, pt1 = (x,y),pt2 = (x2, y2), color = (10,10,255),thickness =  2)
+                            roi_gray = gray_image[y-5:y2+5,x-5:x2+5]
+                            roi_gray=cv2.resize(roi_gray,(48,48))
+                            image_pixels = img_to_array(roi_gray)
+                            image_pixels = np.expand_dims(image_pixels, axis = 0)
+                            image_pixels /= 255
+                            predictions = self.model.predict(image_pixels)
+                            max_index = np.argmax(predictions[0])
+                            emotion_detection = ('Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral')
+                            emotion_prediction = emotion_detection[max_index]
+                            cv2.putText(frame, "{}".format(emotion_prediction), (x2 - int((x2-x)/2) -30,y2+20), cv2.FONT_HERSHEY_SIMPLEX,0.7, self.labelColor,2)
+                            #lable_violation = 'Confidence: {}'.format(str(np.round(np.max(predictions[0])*100,1))+ "%")
+                            percent = int(np.round(np.max(predictions[0])*100))
+                            self.frameResults.append([emotion_prediction, percent])
+                            ##print(str(np.round(predictions*100)))
+                except:
+                    pass
+                Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
+                #Image = cv2.resize(Image,(1920,1080))
+                #FlippedImage = cv2.flip(Image, 1)
+                ConvertToQtFormat = QImage(Image_.data, Image_.shape[1], Image_.shape[0], QImage.Format_RGB888)
+                Pic = ConvertToQtFormat.scaled(1920,1080,Qt.KeepAspectRatio)
 
-#Kamera + video modalrı yapılacak
+                self.ImageUpdate.emit(Pic)
+                a += 1
+                print(a)
+                if a >= 10*25:
+                    break
+            else:
+                if self.changePixmap:
+                    self.ValChanged.emit(1)
+                    self.changePixmap = False
+        
+        cap.release()
+        if self.ThreadActive:
+            for x in range(25*10):
+                if x == 0:
+                    self.filteredResults.append(self.frameResults[0])
+                    continue
+                if x == 1:
+                    self.filteredResults.append(self.frameResults[1])
+                    continue
+                if x == len(self.frameResults) - 1:
+                    self.filteredResults.append(self.frameResults[len(self.frameResults) - 1])
+                    continue
+                if x == len(self.frameResults) - 2:
+                    self.filteredResults.append(self.frameResults[len(self.frameResults) - 2])
+                    continue
+                count = [0,0,0,0,0,0,0]
+                average = [0,0,0,0,0,0,0]
+                print("x", x)
+                for y in range(5):
+                    w = x - 2
+                    if self.frameResults[y + w][0] == "Angry":
+                        average[0] += int(self.frameResults[y + w][1])
+                        count[0] += 1
+                    elif self.frameResults[y + w][0] == "Disgust":
+                        average[1] += int(self.frameResults[y + w][1])
+                        count[1] += 1
+                    elif self.frameResults[y + w][0] == "Fear":
+                        average[2] += int(self.frameResults[y + w][1])
+                        count[2] += 1
+                    elif self.frameResults[y + w][0] == "Happy":
+                        average[3] += int(self.frameResults[y + w][1])
+                        count[3] += 1
+                    elif self.frameResults[y + w][0] == "Sad":
+                        average[4] += int(self.frameResults[y + w][1])
+                        count[4] += 1
+                    elif self.frameResults[y + w][0] == "Surprised":
+                        average[5] += int(self.frameResults[y + w][1])
+                        count[5] += 1
+                    elif self.frameResults[y + w][0] == "Neutral":
+                        average[6] += int(self.frameResults[y + w][1])
+                        count[6] += 1
+                maxx = max(count)
+                maxVal = count.index(maxx)
+                emos = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral']
+                self.filteredResults.append([emos[maxVal], average[maxVal]/count[maxVal]])
+            for u in range(10):
+                print(self.frameResults[u])
+            for u in range(10):
+                print(self.filteredResults[u])
+            #videoWriter.release()
+            #cv2.destroyAllWindows() 
+    
+    def stop(self):
+        self.ThreadActive = False
+        self.quit()        
+            
+            
+"""        self.ThreadActive = True
+        cap = cv2.VideoCapture(0)
+        self.changePixmap = True
+        self.videoPath = None
+        emotions = []
+        emotionsPast = [[]]
+        while self.ThreadActive:
+            ret, frame = cap.read()
+            if ret:
+                h,w,_ = frame.shape
+                gray_image= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                
+                net = cv2.dnn.readNetFromCaffe(self.configFile, self.modelFile)
+                blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 117.0, 123.0))
+                net.setInput(blob)
+                faces = net.forward()
+                try:
+                    for i in range(0, faces.shape[2]):
+                        if self.pauseVid:
+                            break
+                        confidence = faces[0, 0, i, 2]
+                        if confidence > 0.5:
+                            box = faces[0, 0, i, 3:7] * np.array([w, h, w, h])
+                            (x, y, x2, y2) = box.astype("int")
+                            cv2.rectangle(frame, pt1 = (x,y),pt2 = (x2, y2), color = (10,10,255),thickness =  2)
+                            roi_gray = gray_image[y-5:y2+5,x-5:x2+5]
+                            roi_gray=cv2.resize(roi_gray,(48,48))
+                            image_pixels = img_to_array(roi_gray)
+                            image_pixels = np.expand_dims(image_pixels, axis = 0)
+                            image_pixels /= 255
+                            predictions = self.model.predict(image_pixels)
+                            max_index = np.argmax(predictions[0])
+                            emotion_detection = ('Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral')
+                            emotion_prediction = emotion_detection[max_index]
+                            cv2.putText(frame, "{}".format(emotion_prediction), (x2 - int((x2-x)/2) -30,y2+20), cv2.FONT_HERSHEY_SIMPLEX,0.7, self.labelColor,2)
+                            #lable_violation = 'Confidence: {}'.format(str(np.round(np.max(predictions[0])*100,1))+ "%")
+                            emotions = list(np.round(predictions*100))
+                            ##print(str(np.round(predictions*100)))
+                except:
+                    pass
+                Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
+                #Image = cv2.resize(Image,(1920,1080))
+                #FlippedImage = cv2.flip(Image, 1)
+                ConvertToQtFormat = QImage(Image_.data, Image_.shape[1], Image_.shape[0], QImage.Format_RGB888)
+                Pic = ConvertToQtFormat.scaled(1920,1080,Qt.KeepAspectRatio)
+                if not self.pauseVid:
+                    self.ImageUpdate.emit(Pic)
+                    if len(emotions) != 0 and collections.Counter(emotionsPast[0]) != collections.Counter(emotions[0]):
+                        print(emotions)
+                        self.emitEmoSpeed -= 1
+                        if self.emitEmoSpeed == 0:
+                            self.EmotionUpdate.emit(emotions)
+                            emotionsPast = emotions
+                            self.emitEmoSpeed = 8
+            else:
+                if self.changePixmap:
+                    self.ValChanged.emit(1)
+                    self.changePixmap = False
+            cv2.waitKey(1)
+        cap.release()"""
+        

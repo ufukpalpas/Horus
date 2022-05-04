@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="Horus Main Page">
+    <file>clickstart.png</file>
     <file>loading.png</file>
     <file>nocam.png</file>
     <file>capture.png</file>

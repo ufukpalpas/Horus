@@ -8,8 +8,9 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 from msilib.schema import ListView
-from VideoThread import ScreenCaptureThread, VideoMultiThread, VideoSingleThread
+from VideoThread import ScreenCaptureThread, VideoMultiThread, VideoSingleThread, LieDetectionThread
 import PyQt5
+from PyQt5 import QtTest
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -17,6 +18,7 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QFileDialog
 from functools import partial
 import cv2
+import time
 import startscreen_rc
 try:
     from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis, QPercentBarSeries, QPieSeries
@@ -43,6 +45,13 @@ class Ui_MainWindow(object):
             self.videoSingleThread.stop()
         elif sender == "back_button_5":
             self.multiThread.stop_threads()
+        elif sender == "back_button_4":
+            try: 
+                self.deceptionThread.stop()
+                self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
+                self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
+            except:
+                pass
         
     def on_click_single_user(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -140,8 +149,8 @@ class Ui_MainWindow(object):
             self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         else:
             print("No camera Selected")
-    def on_click_deception_detection(self):
-        self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
+    def on_click_deception_detection(self):        
+        self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/clickstart.png"))
         self.stackedWidget.setCurrentIndex(4)
     def on_click_screen_capture(self):
         self.screenCapture = ScreenCaptureThread()
@@ -161,6 +170,9 @@ class Ui_MainWindow(object):
         
     def ImageUpdateSlot_3(self, Image):
         self.p21_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
+    
+    def ImageUpdateSlot_dec(self, Image):
+        self.p5_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
     
     def CameraCheckSlot(self, val):
         if val == 1:
@@ -192,6 +204,21 @@ class Ui_MainWindow(object):
         filePath, _ = QFileDialog.getOpenFileName(None,"Select Video File", "","Video File (*.mp4 *.avi *.mov *.mpeg *.flv *.wmv)", options=options)
         if filePath != "":
             self.videoSingleThread.open(filePath)
+    
+    def start_deception_Detection(self):
+        self.deceptionThread = LieDetectionThread()
+        self.deceptionThread.start()
+        self.deceptionThread.ImageUpdate.connect(self.ImageUpdateSlot_dec)
+        self.deceptionThread.ValChanged.connect(self.CameraCheckSlot)
+        #self.deceptionThread.EmotionUpdate.connect(self.EmotionSlot)
+        t = 28
+        self.detectionStartButton.setEnabled(False)
+        self.detectionLabel.setText(QCoreApplication.translate("Horus", u"Stand Still...", None))
+        while t:
+            QtTest.QTest.qWait(1000)
+            self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u""+ str(t), None))
+            self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u""+ str(t), None))
+            t -= 1
     
     def drawBarChart(self):
         set0 = QBarSet("Happy")
@@ -711,13 +738,14 @@ class Ui_MainWindow(object):
         self.verticalLayout_61 = QVBoxLayout(self.p5_bottom_frame)
         self.verticalLayout_61.setSpacing(0)
         self.verticalLayout_61.setObjectName(u"verticalLayout_61")
-        self.verticalLayout_61.setContentsMargins(0, 0, 0, 0)
-        self.stand_still_label = QTextBrowser(self.p5_bottom_frame)
-        self.stand_still_label.setObjectName(u"stand_still_label")
-        self.stand_still_label.setMaximumSize(QSize(200, 50))
-        self.stand_still_label.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.verticalLayout_61.setContentsMargins(0, 0, 0, 0)       
+        self.detectionLabel = QLabel(self.p5_bottom_frame)
+        self.detectionLabel.setObjectName(u"detectionLabel")
+        font4 = QFont()
+        font4.setPointSize(18)
+        self.detectionLabel.setFont(font4)
 
-        self.verticalLayout_61.addWidget(self.stand_still_label, 0, Qt.AlignHCenter|Qt.AlignBottom)
+        self.verticalLayout_61.addWidget(self.detectionLabel, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
 
         self.gridLayout_15.addWidget(self.p5_bottom_frame, 2, 0, 1, 1)
@@ -728,18 +756,33 @@ class Ui_MainWindow(object):
         self.p5_top_frame.setSizePolicy(sizePolicy)
         self.p5_top_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p5_top_frame.setLineWidth(0)
-        self.verticalLayout_59 = QVBoxLayout(self.p5_top_frame)
+        self.verticalLayout_59 = QHBoxLayout(self.p5_top_frame)
         self.verticalLayout_59.setSpacing(0)
         self.verticalLayout_59.setObjectName(u"verticalLayout_59")
         self.verticalLayout_59.setContentsMargins(0, 0, 0, 0)
         self.back_button_4 = QPushButton(self.p5_top_frame)
         self.back_button_4.setObjectName(u"back_button_4")
         self.back_button_4.setMinimumSize(QSize(125, 50))
+        self.back_button_4.setMaximumSize(QSize(125, 50))
         self.back_button_4.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
         self.back_button_4.clicked.connect(partial(self.on_click_to_menu, "back_button_4"))
 
         self.verticalLayout_59.addWidget(self.back_button_4, 0, Qt.AlignLeft|Qt.AlignTop)
 
+        self.detectionStartButton = QPushButton(self.p5_top_frame)
+        self.detectionStartButton.setObjectName(u"detectionStartButton")
+        font5 = QFont()
+        font5.setPointSize(16)
+        font5.setBold(False)
+        font5.setItalic(True)
+        font5.setUnderline(False)
+        font5.setWeight(50)
+        font5.setStrikeOut(False)
+        font5.setKerning(True)
+        self.detectionStartButton.setFont(font5)
+        self.detectionStartButton.clicked.connect(self.start_deception_Detection)
+
+        self.verticalLayout_59.addWidget(self.detectionStartButton, 0, Qt.AlignRight)
 
         self.gridLayout_15.addWidget(self.p5_top_frame, 0, 0, 1, 1)
 
@@ -747,10 +790,17 @@ class Ui_MainWindow(object):
         self.p5_middle_frame.setObjectName(u"p5_middle_frame")
         self.p5_middle_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p5_middle_frame.setLineWidth(0)
-        self.screenlayout3 = QVBoxLayout(self.p5_middle_frame)
+        self.screenlayout3 = QHBoxLayout(self.p5_middle_frame)
         self.screenlayout3.setSpacing(0)
         self.screenlayout3.setObjectName(u"screenlayout3")
         self.screenlayout3.setContentsMargins(0, 0, 0, 0)
+        fontCounter = QFont()
+        fontCounter.setPointSize(16)
+        self.leftCounterLabel = QLabel(self.p5_middle_frame)
+        self.leftCounterLabel.setObjectName(u"leftCounterLabel")
+        self.leftCounterLabel.setFont(fontCounter)
+        self.screenlayout3.addWidget(self.leftCounterLabel, 0, Qt.AlignHCenter|Qt.AlignVCenter)
+        
         self.p5_screen_label = QLabel(self.p5_middle_frame)
         self.p5_screen_label.setObjectName(u"p5_screen_label")
         sizePolicy3 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
@@ -760,6 +810,12 @@ class Ui_MainWindow(object):
         self.p5_screen_label.setSizePolicy(sizePolicy3)
 
         self.screenlayout3.addWidget(self.p5_screen_label, 0, Qt.AlignHCenter|Qt.AlignVCenter)
+        
+        self.rightCounterLabel = QLabel(self.p5_middle_frame)
+        self.rightCounterLabel.setObjectName(u"rightCounterLabel")
+        self.rightCounterLabel.setFont(fontCounter)
+
+        self.screenlayout3.addWidget(self.rightCounterLabel, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.gridLayout_15.addWidget(self.p5_middle_frame, 1, 0, 1, 1)
 
@@ -1155,13 +1211,12 @@ class Ui_MainWindow(object):
         self.back_button_5.setText("")
         self.upload_button_2.setText("")
         self.p4_screen_label.setText("")
-        self.stand_still_label.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">STAND STILL...</span></p></body></html>", None))
+        self.detectionLabel.setText(QCoreApplication.translate("Horus", u"Click Start Button to Continue", None))
         self.back_button_4.setText("")
+        self.detectionStartButton.setText(QCoreApplication.translate("Horus", u"Start Detection", None))
+        self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
         self.p5_screen_label.setText("")
+        self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
         self.screenCapScanLabel.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
         self.replay_button.setText("")
         self.pause_button.setText("")
