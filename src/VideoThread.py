@@ -502,10 +502,25 @@ class LieDetectionThread(QThread):
                 maxVal = count.index(maxx)
                 emos = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprised', 'Neutral']
                 self.filteredResults.append([emos[maxVal], average[maxVal]/count[maxVal]])
-            for u in range(10):
-                print(self.frameResults[u])
-            for u in range(10):
-                print(self.filteredResults[u])
+                """
+                countAgain = [0,0,0,0,0,0,0]
+                for k in range(len(self.filteredResults)):
+                    if self.frameResults[k][0] == "Angry":
+                        countAgain[0] += 1
+                    elif self.frameResults[k][0] == "Disgust":
+                        countAgain[1] += 1
+                    elif self.frameResults[k][0] == "Fear":
+                        countAgain[2] += 1
+                    elif self.frameResults[k][0] == "Happy":
+                        countAgain[3] += 1
+                    elif self.frameResults[k][0] == "Sad":
+                        countAgain[4] += 1
+                    elif self.frameResults[k][0] == "Surprised":
+                        countAgain[5] += 1
+                    elif self.frameResults[k][0] == "Neutral":
+                        countAgain[6] += 1
+                """
+        
             #videoWriter.release()
             #cv2.destroyAllWindows() 
     
