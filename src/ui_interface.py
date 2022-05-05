@@ -127,8 +127,7 @@ class Ui_MainWindow(object):
             item.setText("No Cameras Detected")
             item.setFont(ff)
             item.setEditable(False)
-            self.model.appendRow(item)   
-                
+            self.model.appendRow(item)         
         self.stackedWidget.setCurrentIndex(8)
         
     def on_click_change_cam(self):
@@ -174,7 +173,7 @@ class Ui_MainWindow(object):
         self.screenCapture.ImageUpdate.connect(self.ImageUpdateSlot_3)
         self.screenCapture.ValChanged.connect(self.CameraCheckSlot)
         self.screenCapture.Analysis.connect(self.AnalysisSlot)
-        #self.screenCapture.RandomSender.connect(self.RandomSlot)
+        self.screenCapture.RandomSender.connect(self.RandomSlot)
         self.screen_frame =0
         self.screenCapture.Real_time_analysis.connect(self.AnalysisSlot_5)
         self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))

@@ -599,7 +599,7 @@ class ScreenCaptureThread(QThread):
     def stop(self):
         self.ThreadActive = False
         analysis = list(self.average_emotions/ np.sum(self.average_emotions))
-        if not np.isnan(self.analysis).any():
+        if not np.isnan(analysis).any():
             self.Analysis.emit(analysis)
         self.quit()
 
