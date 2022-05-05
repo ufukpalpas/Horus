@@ -519,7 +519,7 @@ class ScreenCaptureThread(QThread):
                     except:
                         pass
                     max_ind = np.argmax(self.captured_emotions)
-                    average_emotion = 0
+                    average_emotion = []
                     if self.captured_emotions[max_ind] != 0:
                         if max_ind == 0:
                             self.average_emotions[0] +=1
@@ -545,7 +545,8 @@ class ScreenCaptureThread(QThread):
                         average_emotion = self.captured_emotions/ np.sum(self.captured_emotions)
                         #print("av: ", self.average_emotions)
                     #print("Emotion with highest acc: ", maxed_emotion, " with array ac: ", average_emotion)
-                    self.Real_time_analysis.emit(list(average_emotion))
+                    if len(average_emotion) != 0:
+                        self.Real_time_analysis.emit(list(average_emotion))
                     Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
                     #Image = cv2.resize(Image,(1920,1080))
                     #FlippedImage = cv2.flip(Image, 1)
