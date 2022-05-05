@@ -8,6 +8,7 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 from msilib.schema import ListView
+from lie import DeceptionDetectionVoice
 from VideoThread import ScreenCaptureThread, VideoMultiThread, VideoSingleThread, LieDetectionThread
 import PyQt5
 from PyQt5 import QtTest
@@ -38,6 +39,9 @@ except ImportError:
 
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.voicePreds = None
+        self.decVidResult = None
         
     def on_click_to_menu(self, sender):
         self.stackedWidget.setCurrentIndex(1)
@@ -48,12 +52,14 @@ class Ui_MainWindow(object):
         elif sender == "back_button_4":
             try: 
                 self.deceptionThread.stop()
+                self.deceptionDetectionVoice.stop()
                 self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
                 self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
             except:
                 pass
         elif sender == "back_button_3":
             self.screenCapture.stop()
+            
         
     def on_click_single_user(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -210,7 +216,26 @@ class Ui_MainWindow(object):
         else:
             angry, disgust, fear, happy, sad, suprised, neutral = emotion[0][0],emotion[0][1],emotion[0][2],emotion[0][3],emotion[0][4],emotion[0][5],emotion[0][6]
             self.updateBarChart(self.seriesBarSingle, happy, sad, disgust, angry, neutral, suprised, fear)
+            
+    def EmotionSlot_deception(self, decVidResult):
+        self.decVidResult = decVidResult
+        print(self.decVidResult)
+        self.finishDeceptionControl()
         
+    def VoiceUpdateSlot(self, voicePreds):
+        self.voicePreds = voicePreds
+        print(self.voicePreds)
+        self.finishDeceptionControl()
+    
+    def finishDeceptionControl(self):
+        if self.decVidResult != None and self.voicePreds != None:
+            contrib = 0.2 if self.decVidResult else 0 #May change the coef
+            lie = True if (self.voicePreds[0][0][1] * 0.80 + contrib) >= 0.70 else False
+            if lie:
+                self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/lie.png"))
+            else:
+                self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/truth.png"))
+            self.detectionStartButton.setEnabled(True)
     def countCameras(self):
         camera = 0
         while True:
@@ -232,15 +257,18 @@ class Ui_MainWindow(object):
         self.deceptionThread.start()
         self.deceptionThread.ImageUpdate.connect(self.ImageUpdateSlot_dec)
         self.deceptionThread.ValChanged.connect(self.CameraCheckSlot)
-        #self.deceptionThread.EmotionUpdate.connect(self.EmotionSlot)
-        t = 28
+        self.deceptionThread.EmotionUpdate.connect(self.EmotionSlot_deception)
+        self.deceptionDetectionVoice = DeceptionDetectionVoice()
+        self.deceptionDetectionVoice.start()
+        self.deceptionDetectionVoice.LieVoiceResult.connect(self.VoiceUpdateSlot)
+        # t = 28
         self.detectionStartButton.setEnabled(False)
         self.detectionLabel.setText(QCoreApplication.translate("Horus", u"Stand Still...", None))
-        while t:
-            QtTest.QTest.qWait(1000)
-            self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u""+ str(t), None))
-            self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u""+ str(t), None))
-            t -= 1
+        # while t:
+        #     QtTest.QTest.qWait(1000)   u""+ str(t)
+        self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u"Listening|Recording", None))
+        self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"Listening|Recording", None))
+            # t -= 1
     
     def drawBarChart(self):
         set0 = QBarSet("Happy")
@@ -954,7 +982,7 @@ class Ui_MainWindow(object):
         self.back_button_2.setObjectName(u"back_button_2")
         self.back_button_2.setMinimumSize(QSize(125, 50))
         self.back_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        #self.back_button_2.clicked.connect(self.on_click_to_menu) #2 yerden erişim sağlanabiliyo hallet
+        self.back_button_2.clicked.connect(partial(self.on_click_to_menu, "back_button_2"))
 
         self.verticalLayout_13.addWidget(self.back_button_2, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -970,6 +998,12 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_15 = QVBoxLayout()
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.viewCodeButton = QPushButton(self.page_22)
+        self.viewCodeButton.setObjectName(u"viewCodeButton")
+        self.viewCodeButton.setMinimumSize(QSize(300, 50))
+        self.viewCodeButton.setStyleSheet(u"border-image: url(:/Horus Main Page/view.png);")
+
+        self.verticalLayout_15.addWidget(self.viewCodeButton, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.gridLayout_17.addLayout(self.verticalLayout_15, 3, 0, 1, 1)
 
@@ -978,35 +1012,35 @@ class Ui_MainWindow(object):
         self.linechart_button = QPushButton(self.page_22)
         self.linechart_button.setObjectName(u"linechart_button")
         self.linechart_button.setMinimumSize(QSize(150, 40))
-        self.linechart_button.setStyleSheet(u"border-image: url(:/Horus Main Page/linechart.png);")
+        self.linechart_button.setStyleSheet(u"border-image: url(:/Horus Main Page/1.png);")
 
         self.horizontalLayout_9.addWidget(self.linechart_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.pie_button = QPushButton(self.page_22)
         self.pie_button.setObjectName(u"pie_button")
         self.pie_button.setMinimumSize(QSize(150, 40))
-        self.pie_button.setStyleSheet(u"border-image: url(:/Horus Main Page/pie.png);")
+        self.pie_button.setStyleSheet(u"border-image: url(:/Horus Main Page/2.png);")
 
         self.horizontalLayout_9.addWidget(self.pie_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.histogram_button = QPushButton(self.page_22)
         self.histogram_button.setObjectName(u"histogram_button")
         self.histogram_button.setMinimumSize(QSize(150, 40))
-        self.histogram_button.setStyleSheet(u"border-image: url(:/Horus Main Page/histogram.png);")
+        self.histogram_button.setStyleSheet(u"border-image: url(:/Horus Main Page/3.png);")
 
         self.horizontalLayout_9.addWidget(self.histogram_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.table_button = QPushButton(self.page_22)
         self.table_button.setObjectName(u"table_button")
         self.table_button.setMinimumSize(QSize(150, 40))
-        self.table_button.setStyleSheet(u"border-image: url(:/Horus Main Page/table.png);")
+        self.table_button.setStyleSheet(u"border-image: url(:/Horus Main Page/4.png);")
 
         self.horizontalLayout_9.addWidget(self.table_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.donut_button = QPushButton(self.page_22)
         self.donut_button.setObjectName(u"donut_button")
         self.donut_button.setMinimumSize(QSize(150, 40))
-        self.donut_button.setStyleSheet(u"border-image: url(:/Horus Main Page/donut.png);")
+        self.donut_button.setStyleSheet(u"border-image: url(:/Horus Main Page/5.png);")
 
         self.horizontalLayout_9.addWidget(self.donut_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -1236,9 +1270,9 @@ class Ui_MainWindow(object):
         self.detectionLabel.setText(QCoreApplication.translate("Horus", u"Click Start Button to Continue", None))
         self.back_button_4.setText("")
         self.detectionStartButton.setText(QCoreApplication.translate("Horus", u"Start Detection", None))
-        self.leftCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
+        self.leftCounterLabel.setText("")
         self.p5_screen_label.setText("")
-        self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"28", None))
+        self.rightCounterLabel.setText("")
         self.screenCapScanLabel.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
         self.replay_button.setText("")
         self.pause_button.setText("")
@@ -1249,6 +1283,7 @@ class Ui_MainWindow(object):
         self.p21_screen_label.setText("")
         self.back_button_2.setText("")
         self.chooseo_output_type.setText("")
+        self.viewCodeButton.setText("")
         self.linechart_button.setText("")
         self.pie_button.setText("")
         self.histogram_button.setText("")

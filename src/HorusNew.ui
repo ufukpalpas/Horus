@@ -30,7 +30,7 @@
        <string notr="true">border-image: url(:/Horus Main Page/startscreen.jpg);</string>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -1280,7 +1280,24 @@ p, li { white-space: pre-wrap; }
          </layout>
         </item>
         <item row="3" column="0">
-         <layout class="QVBoxLayout" name="verticalLayout_15"/>
+         <layout class="QVBoxLayout" name="verticalLayout_15">
+          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+           <widget class="QPushButton" name="viewCodeButton">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-image: url(:/Horus Main Page/view.png);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item row="1" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -1293,7 +1310,7 @@ p, li { white-space: pre-wrap; }
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-image: url(:/Horus Main Page/linechart.png);</string>
+             <string notr="true">border-image: url(:/Horus Main Page/1.png);</string>
             </property>
             <property name="text">
              <string/>
@@ -1309,7 +1326,7 @@ p, li { white-space: pre-wrap; }
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-image: url(:/Horus Main Page/pie.png);</string>
+             <string notr="true">border-image: url(:/Horus Main Page/2.png);</string>
             </property>
             <property name="text">
              <string/>
@@ -1325,7 +1342,7 @@ p, li { white-space: pre-wrap; }
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-image: url(:/Horus Main Page/histogram.png);</string>
+             <string notr="true">border-image: url(:/Horus Main Page/3.png);</string>
             </property>
             <property name="text">
              <string/>
@@ -1341,7 +1358,7 @@ p, li { white-space: pre-wrap; }
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-image: url(:/Horus Main Page/table.png);</string>
+             <string notr="true">border-image: url(:/Horus Main Page/4.png);</string>
             </property>
             <property name="text">
              <string/>
@@ -1357,7 +1374,7 @@ p, li { white-space: pre-wrap; }
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">border-image: url(:/Horus Main Page/donut.png);</string>
+             <string notr="true">border-image: url(:/Horus Main Page/5.png);</string>
             </property>
             <property name="text">
              <string/>
@@ -1703,8 +1720,6 @@ p, li { white-space: pre-wrap; }
   </widget>
  </widget>
  <resources>
-  <include location="ui_img/ui_img/startscreen.qrc"/>
-  <include location="ui_img/ui_img/startscreen.qrc"/>
   <include location="ui_img/ui_img/startscreen.qrc"/>
  </resources>
  <connections/>
