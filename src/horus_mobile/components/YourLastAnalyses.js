@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     fontFamily: 'V-dub',
-    marginBottom: 8,
+    marginBottom: 20,
   },
   background: {
     flex: 1,
