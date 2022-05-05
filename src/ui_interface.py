@@ -149,6 +149,7 @@ class Ui_MainWindow(object):
             self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
             self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)#   ValChanged.connect(self.CameraCheckSlot)
             self.multiThread.Analysis.connect(self.AnalysisSlot_3)
+            self.multiThread.Thread_specific_anal.connect(self.AnalysisSlot_4)
             self.stackedWidget.setCurrentIndex(3)
             self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         else:
@@ -176,8 +177,12 @@ class Ui_MainWindow(object):
         print("last analy: ", self.analysis_single)
     
     def AnalysisSlot_3(self, anal):
-        self.analysis_multi = anal
-        print("last analysis from multi thread: ", self.analysis_multi) 
+        self.total_analysis_multi = anal
+        print("Total analysis from multi thread: ", self.total_analysis_multi) 
+     
+    def AnalysisSlot_4(self, thread_name, anal):
+        self.thread_specific_anal = anal
+        print("Real Time Analysis from thread: ",thread_name, " :", self.thread_specific_anal) 
      
     def ImageUpdateSlot(self, Image):
         self.p3_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))

@@ -35,6 +35,7 @@ class VideoSingleThread(QThread):
 #        self.average_emotions[5] = 0 #Surprised
 #        self.average_emotions[6] = 0 #Neutral
         self.captured_emotions = self.average_emotions.copy()
+        self.emitEmoSpeed = 4
     
     def run(self):
         self.ThreadActive = True
@@ -134,7 +135,7 @@ class VideoSingleThread(QThread):
                     elif max_ind == 6:
                         self.average_emotions[6] +=1
                         maxed_emotion = 'Neutral'
-                    average_emotion = self.captured_emotions[max_ind]/ np.sum(self.captured_emotions)
+                    #average_emotion = self.captured_emotions/ np.sum(self.captured_emotions)
                     #print("av: ", self.average_emotions)
                 #print("cap: ", maxed_emotion, " with ac: ", average_emotion)
                 Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
@@ -145,7 +146,7 @@ class VideoSingleThread(QThread):
                 if not self.pauseVid:
                     self.ImageUpdate.emit(Pic)
                     if len(emotions) != 0 and collections.Counter(emotionsPast[0]) != collections.Counter(emotions[0]):
-                        print(emotions)
+                        #print(emotions)
                         self.emitEmoSpeed -= 1
                         if self.emitEmoSpeed == 0:
                             self.EmotionUpdate.emit(emotions)
@@ -300,10 +301,14 @@ class VideoThread(QThread):
                     elif max_ind == 6:
                         self.average_emotions[6] +=1
                         maxed_emotion = 'Neutral'
-                    average_emotion = self.captured_emotions[max_ind]/ np.sum(self.captured_emotions)
+                    average_emotion = self.captured_emotions/ np.sum(self.captured_emotions)
+                    if self.chosen == 1:
+                        analys = list(average_emotion/ np.sum(average_emotion))
+                        self.Analysis_Thread.emit(analys)
                     #print("av: ", self.average_emotions)
-                #print("cap: ", maxed_emotion, " with ac: ", average_emotion)
+                #print(" ", self.name, " Emotion with highest acc: ", maxed_emotion)# " with array ac: ", average_emotion)
                 if self.chosen == 1:
+                    #print("av: ", self.average_emotions)
                     self.frame_sender(frame)
                     #print("Thread ", self.name, " sending")
                 #else:
@@ -348,12 +353,14 @@ class VideoThread(QThread):
         self.ThreadActive = False
         print("Stopped thread ", self.name)
         #analys = list(self.captured_emotions)
-        analys = list(self.average_emotions/ np.sum(self.average_emotions))
-        self.Analysis_Thread.emit(analys)
+        #analys = list(self.average_emotions/ np.sum(self.average_emotions))
+        #self.Analysis_Thread.emit(analys)
         self.quit()
         
 class VideoMultiThread(QThread):
     Analysis = pyqtSignal(list)
+    Thread_specific_anal = pyqtSignal(str ,list)
+    
     def __init__(self, cameraInds):
         super().__init__()
         self.camerInds = cameraInds
@@ -395,9 +402,12 @@ class VideoMultiThread(QThread):
     def get_analysis(self, anal):
         print("Analysis received from ", self.sender().name, " : ", anal)
         self.analysis_array.append(anal)
+        self.analysis_result = np.sum(self.analysis_array, axis=0) / len(self.analysis_array)
+        #self.Analysis.emit(list(self.analysis_result))
+        self.Thread_specific_anal.emit(self.sender().name, list(self.analysis_result))
+    
     
     def getCurrentImageUpdate(self):
-        print("THREADASDAS ", self.currentThread)
         return self.threads[self.currentThread].ImageUpdate
     
     def getCurrentValChanged(self):
@@ -413,6 +423,7 @@ class ScreenCaptureThread(QThread):
     ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
     ValChanged = pyqtSignal(int) #camera check forward
     Analysis = pyqtSignal(list) #list of analysis of emotions
+    Real_time_analysis = pyqtSignal(list) #real-time analysis of emotions
     
     def __init__(self):
         super().__init__()
@@ -531,9 +542,10 @@ class ScreenCaptureThread(QThread):
                         elif max_ind == 6:
                             self.average_emotions[6] +=1
                             maxed_emotion = 'Neutral'
-                        average_emotion = self.captured_emotions[max_ind]/ np.sum(self.captured_emotions)
+                        average_emotion = self.captured_emotions/ np.sum(self.captured_emotions)
                         #print("av: ", self.average_emotions)
-                    #print("cap: ", maxed_emotion, " with ac: ", average_emotion)
+                    #print("Emotion with highest acc: ", maxed_emotion, " with array ac: ", average_emotion)
+                    self.Real_time_analysis.emit(list(average_emotion))
                     Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
                     #Image = cv2.resize(Image,(1920,1080))
                     #FlippedImage = cv2.flip(Image, 1)
@@ -626,7 +638,7 @@ class LieDetectionThread(QThread):
 
                 self.ImageUpdate.emit(Pic)
                 a += 1
-                print(a)
+                #print(a)
                 if a >= 10*25:
                     break
             else:
