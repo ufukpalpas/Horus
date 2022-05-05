@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import QFileDialog
 from functools import partial
 import cv2
 import time
+import pickle
 import startscreen_rc
 try:
     from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis, QPercentBarSeries, QPieSeries, QLineSeries
@@ -70,6 +71,7 @@ class Ui_MainWindow(object):
         self.videoSingleThread.ImageUpdate.connect(self.ImageUpdateSlot)
         self.videoSingleThread.ValChanged.connect(self.CameraCheckSlot)
         self.videoSingleThread.EmotionUpdate.connect(self.EmotionSlot)
+        self.videoSingleThread.RandomSender.connect(self.RandomSlot)
         self.videoSingleThread.Analysis.connect(self.AnalysisSlot_2)
         self.p3_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png")) #bunu asağıdan aldık buraya koyduk herbirininkini al kendi butonuna koy
     
@@ -125,8 +127,7 @@ class Ui_MainWindow(object):
             item.setText("No Cameras Detected")
             item.setFont(ff)
             item.setEditable(False)
-            self.model.appendRow(item)   
-                
+            self.model.appendRow(item)         
         self.stackedWidget.setCurrentIndex(8)
         
     def on_click_change_cam(self):
@@ -154,9 +155,11 @@ class Ui_MainWindow(object):
         if len(self.checkedCameraInds) > 0:
             self.multiThread = VideoMultiThread(self.checkedCameraInds)
             self.frame_multi = 0
+            self.multiThread.RandomSender.connect(self.RandomSlot)
             self.multiThread.startThreads()
             self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
             self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)#   ValChanged.connect(self.CameraCheckSlot)
+            
             self.multiThread.Analysis.connect(self.AnalysisSlot_3)
             self.multiThread.Thread_specific_anal.connect(self.AnalysisSlot_4)
             self.stackedWidget.setCurrentIndex(3)
@@ -172,11 +175,12 @@ class Ui_MainWindow(object):
         self.screenCapture.ImageUpdate.connect(self.ImageUpdateSlot_3)
         self.screenCapture.ValChanged.connect(self.CameraCheckSlot)
         self.screenCapture.Analysis.connect(self.AnalysisSlot)
+        self.screenCapture.RandomSender.connect(self.RandomSlot)
         self.screen_frame =0
         self.screenCapture.Real_time_analysis.connect(self.AnalysisSlot_5)
         self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(5)   
-        
+    
     def on_click_goto_result(self, sender):
         self.stackedWidget.setCurrentIndex(6)
         if sender == "back_button_10": #histogram page
@@ -189,24 +193,33 @@ class Ui_MainWindow(object):
             self.p9_linelayout.takeAt(0).widget().deleteLater()
         elif sender == "pushButton_3":
             self.comingFrom = "Single"
+            self.videoSingleThread.stop()
+            fname = 'save_files/Single_' + self.randomName
+            with open(fname, 'wb') as f:
+                pickle.dump(self.analysis_single, f)
         elif sender == "pushButton_2":
+            self.multiThread.stop_threads()
             self.comingFrom = "Multi"
+            fname = 'save_files/Multi_' + self.randomName
+            with open(fname, 'wb') as f:
+                pickle.dump(self.total_analysis_multi, f)
         elif sender == "pushButton":
+            self.screenCapture.stop()
             self.comingFrom = "Capture"
+            fname = 'save_files/Capture_' + self.randomName
+            with open(fname, 'wb') as f:
+                pickle.dump(self.analysis_screen, f)
     
     def on_click_pie_button(self):
         if self.comingFrom == "Single":
-            self.videoSingleThread.stop()
             anal = self.analysis_single
             analList = [element * 100 for element in anal]
             self.chartViewPieChart, self.seriesPieChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
         elif self.comingFrom == "Multi":
-            self.multiThread.stop_threads()
             anal = self.total_analysis_multi
             analList = [element * 100 for element in anal]
             self.chartViewPieChart, self.seriesPieChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
         elif self.comingFrom == "Capture":
-            self.screenCapture.stop()
             anal = self.analysis_screen
             analList = [element * 100 for element in anal]
             self.chartViewPieChart, self.seriesPieChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
@@ -215,17 +228,14 @@ class Ui_MainWindow(object):
         
     def on_click_histogram_button(self):
         if self.comingFrom == "Single":
-            self.videoSingleThread.stop()
             anal = self.analysis_single
             analList = [element * 100 for element in anal]
             self.chartViewBarChart, self.seriesBarChart = self.drawBarChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=600)
         elif self.comingFrom == "Multi":
-            self.multiThread.stop_threads()
             anal = self.total_analysis_multi
             analList = [element * 100 for element in anal]
             self.chartViewBarChart, self.seriesBarChart = self.drawBarChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=600)
         elif self.comingFrom == "Capture":
-            self.screenCapture.stop()
             anal = self.analysis_screen
             analList = [element * 100 for element in anal]
             self.chartViewBarChart, self.seriesBarChart = self.drawBarChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=600)
@@ -234,17 +244,14 @@ class Ui_MainWindow(object):
         
     def on_click_donut_button(self):
         if self.comingFrom == "Single":
-            self.videoSingleThread.stop()
             anal = self.analysis_single
             analList = [element * 100 for element in anal]
             self.chartViewDonutChart, self.seriesDonutChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700, donut = True)
         elif self.comingFrom == "Multi":
-            self.multiThread.stop_threads()
             anal = self.total_analysis_multi
             analList = [element * 100 for element in anal]
             self.chartViewDonutChart, self.seriesDonutChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700, donut = True)
         elif self.comingFrom == "Capture":
-            self.screenCapture.stop()
             anal = self.analysis_screen
             analList = [element * 100 for element in anal]
             self.chartViewDonutChart, self.seriesDonutChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700, donut = True)
@@ -253,17 +260,14 @@ class Ui_MainWindow(object):
         
     def on_click_line_button(self):
         if self.comingFrom == "Single":
-            self.videoSingleThread.stop()
             anal = self.analysis_single
             analList = [element * 100 for element in anal]
             self.chartViewLineChart, self.seriesLineChart = self.drawLineChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
         elif self.comingFrom == "Multi":
-            self.multiThread.stop_threads()
             anal = self.total_analysis_multi
             analList = [element * 100 for element in anal]
             self.chartViewLineChart, self.seriesLineChart = self.drawLineChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
         elif self.comingFrom == "Capture":
-            self.screenCapture.stop()
             anal = self.analysis_screen
             analList = [element * 100 for element in anal]
             self.chartViewLineChart, self.seriesLineChart = self.drawLineChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
@@ -335,6 +339,10 @@ class Ui_MainWindow(object):
         self.p4_screen_label.setPixmap(QPixmap(stt))
         self.p5_screen_label.setPixmap(QPixmap(stt))
         self.p21_screen_label.setPixmap(QPixmap(stt))
+        
+    def RandomSlot(self, rand):
+        self.randomName = rand
+        print(self.randomName)
         
     def EmotionSlot(self, emotion):
         if len(emotion) == 0:
