@@ -22,8 +22,6 @@ from functools import partial
 import cv2
 import time
 import pickle
-import random
-import string
 import startscreen_rc
 try:
     from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis, QPercentBarSeries, QPieSeries, QLineSeries
@@ -182,11 +180,6 @@ class Ui_MainWindow(object):
         self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(5)   
     
-    def randomStr(self):
-        letters = string.ascii_letters
-        st = ''.join(random.choice(letters) for i in range(10))
-        return st
-    
     def on_click_goto_result(self, sender):
         self.stackedWidget.setCurrentIndex(6)
         if sender == "back_button_10": #histogram page
@@ -200,19 +193,19 @@ class Ui_MainWindow(object):
         elif sender == "pushButton_3":
             self.comingFrom = "Single"
             self.videoSingleThread.stop()
-            fname = 'save_files/Single_' + self.randomStr()
+            fname = 'save_files/Single_' + self.randomName
             with open(fname, 'wb') as f:
                 pickle.dump(self.analysis_single, f)
         elif sender == "pushButton_2":
             self.multiThread.stop_threads()
             self.comingFrom = "Multi"
-            fname = 'save_files/Multi_' + self.randomStr()
+            fname = 'save_files/Multi_' + self.randomName
             with open(fname, 'wb') as f:
                 pickle.dump(self.total_analysis_multi, f)
         elif sender == "pushButton":
             self.screenCapture.stop()
             self.comingFrom = "Capture"
-            fname = 'save_files/Capture_' + self.randomStr()
+            fname = 'save_files/Capture_' + self.randomName
             with open(fname, 'wb') as f:
                 pickle.dump(self.analysis_screen, f)
     
