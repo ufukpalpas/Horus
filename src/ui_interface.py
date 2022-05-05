@@ -59,6 +59,7 @@ class Ui_MainWindow(object):
                 pass
         elif sender == "back_button_3":
             self.screenCapture.stop()
+            
         
     def on_click_single_user(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -976,7 +977,7 @@ class Ui_MainWindow(object):
         self.back_button_2.setObjectName(u"back_button_2")
         self.back_button_2.setMinimumSize(QSize(125, 50))
         self.back_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        #self.back_button_2.clicked.connect(self.on_click_to_menu) #2 yerden erişim sağlanabiliyo hallet
+        self.back_button_2.clicked.connect(partial(self.on_click_to_menu, "back_button_2"))
 
         self.verticalLayout_13.addWidget(self.back_button_2, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -992,6 +993,12 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_15 = QVBoxLayout()
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.viewCodeButton = QPushButton(self.page_22)
+        self.viewCodeButton.setObjectName(u"viewCodeButton")
+        self.viewCodeButton.setMinimumSize(QSize(300, 50))
+        self.viewCodeButton.setStyleSheet(u"border-image: url(:/Horus Main Page/view.png);")
+
+        self.verticalLayout_15.addWidget(self.viewCodeButton, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.gridLayout_17.addLayout(self.verticalLayout_15, 3, 0, 1, 1)
 
@@ -1000,35 +1007,35 @@ class Ui_MainWindow(object):
         self.linechart_button = QPushButton(self.page_22)
         self.linechart_button.setObjectName(u"linechart_button")
         self.linechart_button.setMinimumSize(QSize(150, 40))
-        self.linechart_button.setStyleSheet(u"border-image: url(:/Horus Main Page/linechart.png);")
+        self.linechart_button.setStyleSheet(u"border-image: url(:/Horus Main Page/1.png);")
 
         self.horizontalLayout_9.addWidget(self.linechart_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.pie_button = QPushButton(self.page_22)
         self.pie_button.setObjectName(u"pie_button")
         self.pie_button.setMinimumSize(QSize(150, 40))
-        self.pie_button.setStyleSheet(u"border-image: url(:/Horus Main Page/pie.png);")
+        self.pie_button.setStyleSheet(u"border-image: url(:/Horus Main Page/2.png);")
 
         self.horizontalLayout_9.addWidget(self.pie_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.histogram_button = QPushButton(self.page_22)
         self.histogram_button.setObjectName(u"histogram_button")
         self.histogram_button.setMinimumSize(QSize(150, 40))
-        self.histogram_button.setStyleSheet(u"border-image: url(:/Horus Main Page/histogram.png);")
+        self.histogram_button.setStyleSheet(u"border-image: url(:/Horus Main Page/3.png);")
 
         self.horizontalLayout_9.addWidget(self.histogram_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.table_button = QPushButton(self.page_22)
         self.table_button.setObjectName(u"table_button")
         self.table_button.setMinimumSize(QSize(150, 40))
-        self.table_button.setStyleSheet(u"border-image: url(:/Horus Main Page/table.png);")
+        self.table_button.setStyleSheet(u"border-image: url(:/Horus Main Page/4.png);")
 
         self.horizontalLayout_9.addWidget(self.table_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.donut_button = QPushButton(self.page_22)
         self.donut_button.setObjectName(u"donut_button")
         self.donut_button.setMinimumSize(QSize(150, 40))
-        self.donut_button.setStyleSheet(u"border-image: url(:/Horus Main Page/donut.png);")
+        self.donut_button.setStyleSheet(u"border-image: url(:/Horus Main Page/5.png);")
 
         self.horizontalLayout_9.addWidget(self.donut_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -1271,6 +1278,7 @@ class Ui_MainWindow(object):
         self.p21_screen_label.setText("")
         self.back_button_2.setText("")
         self.chooseo_output_type.setText("")
+        self.viewCodeButton.setText("")
         self.linechart_button.setText("")
         self.pie_button.setText("")
         self.histogram_button.setText("")

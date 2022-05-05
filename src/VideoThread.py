@@ -35,6 +35,7 @@ class VideoSingleThread(QThread):
 #        self.average_emotions[5] = 0 #Surprised
 #        self.average_emotions[6] = 0 #Neutral
         self.captured_emotions = self.average_emotions.copy()
+        self.emitEmoSpeed = 4
     
     def run(self):
         self.ThreadActive = True
