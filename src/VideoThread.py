@@ -204,6 +204,7 @@ class VideoThread(QThread):
     ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
     ValChanged = pyqtSignal(int) #camera check forward
     Analysis_Thread = pyqtSignal(list) #list of analysis of emotions
+    FrameSender = pyqtSignal(np.ndarray)
     
     def __init__(self, threadID, name):
         super().__init__()
@@ -340,6 +341,7 @@ class VideoThread(QThread):
         cap.release
         
     def frame_sender(self, frame):
+        self.FrameSender.emit(frame)
         Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
                 #Image = cv2.resize(Image,(1920,1080))
                 #FlippedImage = cv2.flip(Image, 1)
@@ -379,6 +381,7 @@ class VideoThread(QThread):
 class VideoMultiThread(QThread):
     Analysis = pyqtSignal(list)
     Thread_specific_anal = pyqtSignal(str ,list)
+    RandomSender = pyqtSignal(str)
     
     def __init__(self, cameraInds):
         super().__init__()
@@ -390,6 +393,11 @@ class VideoMultiThread(QThread):
         
     def startThreads(self):
         self.threads = []
+        fourcc = cv2.VideoWriter_fourcc('X','V','I','D') #(*'MP42')
+        rand_string = randomStr(self)
+        name_of = "saved_videos\\multi_video_" + str(rand_string) +".avi"
+        self.RandomSender.emit(rand_string)
+        self.videoWriter = cv2.VideoWriter(str(name_of), fourcc, 10.0, (640, 480))
         for i in range(self.threadCount):
             temp = VideoThread(self.camerInds[i], "thread-" + str(self.camerInds[i]))
             print("Added " , temp.name)
@@ -398,7 +406,9 @@ class VideoMultiThread(QThread):
             self.frame = None
             self.threads[i].start()
             self.threads[i].Analysis_Thread.connect(self.get_analysis)
+            self.threads[i].FrameSender.connect(self.get_frames)
         self.threads[self.currentThread].set_chosen(1)
+        
         print("sending")
         
         #for i in range(self.threadCount):
@@ -425,6 +435,10 @@ class VideoMultiThread(QThread):
         self.analysis_result = np.sum(self.analysis_array, axis=0) / len(self.analysis_array)
         #self.Analysis.emit(list(self.analysis_result))
         self.Thread_specific_anal.emit(self.sender().name, list(anal))
+    
+    def get_frames(self, frame):
+        frame_to_write = cv2.resize(frame, (640, 480))
+        self.videoWriter.write(frame_to_write)    
     
     
     def getCurrentImageUpdate(self):
