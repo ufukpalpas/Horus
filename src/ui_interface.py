@@ -42,6 +42,7 @@ class Ui_MainWindow(object):
     def __init__(self):
         self.voicePreds = None
         self.decVidResult = None
+        self.thread_specific_anal = []
         
     def on_click_to_menu(self, sender):
         self.stackedWidget.setCurrentIndex(1)
@@ -176,19 +177,19 @@ class Ui_MainWindow(object):
     
     def AnalysisSlot(self, anal):
         self.analysis_screen = anal
-        print("last analy: ", self.analysis_screen)
+        print("last analy: ", self.analysis_screen) #Screen Capture Analysis
         
     def AnalysisSlot_2(self, anal):
         self.analysis_single = anal
-        print("last analy: ", self.analysis_single)
+        print("last analy: ", self.analysis_single) #Single User Analysis
     
     def AnalysisSlot_3(self, anal):
         self.total_analysis_multi = anal
-        print("Total analysis from multi thread: ", self.total_analysis_multi) 
+        print("Total analysis from multi thread: ", self.total_analysis_multi) #Crowd Control Last Analysis
      
     def AnalysisSlot_4(self, thread_name, anal):
         self.thread_specific_anal = anal
-        print("Real Time Analysis from thread: ",thread_name, " :", self.thread_specific_anal) 
+        print("Real Time Analysis from thread: ",thread_name, " :", self.thread_specific_anal) #Real Time Thread Analysis, with Thread Name
      
     def ImageUpdateSlot(self, Image):
         self.p3_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
