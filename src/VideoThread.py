@@ -1,3 +1,4 @@
+from cmath import nan
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -397,7 +398,8 @@ class VideoMultiThread(QThread):
         for i in range(self.threadCount):
             self.threads[i].stop()
         self.analysis_result = np.sum(self.analysis_array, axis=0) / len(self.analysis_array)
-        self.Analysis.emit(list(self.analysis_result))
+        if not np.isnan(self.analysis_result).any():
+            self.Analysis.emit(list(self.analysis_result))
     
     def get_analysis(self, anal):
         print("Analysis received from ", self.sender().name, " : ", anal)
@@ -545,8 +547,8 @@ class ScreenCaptureThread(QThread):
                         average_emotion = self.captured_emotions/ np.sum(self.captured_emotions)
                         #print("av: ", self.average_emotions)
                     #print("Emotion with highest acc: ", maxed_emotion, " with array ac: ", average_emotion)
-                    if len(average_emotion) != 0:
-                        self.Real_time_analysis.emit(list(average_emotion))
+                        if len(average_emotion) != 0:
+                            self.Real_time_analysis.emit(list(average_emotion))
                     Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
                     #Image = cv2.resize(Image,(1920,1080))
                     #FlippedImage = cv2.flip(Image, 1)
@@ -570,7 +572,8 @@ class ScreenCaptureThread(QThread):
     def stop(self):
         self.ThreadActive = False
         analysis = list(self.average_emotions/ np.sum(self.average_emotions))
-        self.Analysis.emit(analysis)
+        if not np.isnan(self.analysis).any():
+            self.Analysis.emit(analysis)
         self.quit()
 
 class LieDetectionThread(QThread):

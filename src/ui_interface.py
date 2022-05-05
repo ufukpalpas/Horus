@@ -23,7 +23,7 @@ import cv2
 import time
 import startscreen_rc
 try:
-    from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis, QPercentBarSeries, QPieSeries
+    from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis, QPercentBarSeries, QPieSeries, QLineSeries
     from PyQt5.QtCore import Qt
     from PyQt5.QtGui import QPainter
     from PyQt5.QtWidgets import QApplication
@@ -44,6 +44,7 @@ class Ui_MainWindow(object):
         self.voicePreds = None
         self.decVidResult = None
         self.thread_specific_anal = []
+        self.comingFrom = None
         
     def on_click_to_menu(self, sender):
         self.stackedWidget.setCurrentIndex(1)
@@ -180,26 +181,112 @@ class Ui_MainWindow(object):
         self.stackedWidget.setCurrentIndex(6)
         if sender == "back_button_10": #histogram page
             self.p7_histogramlayout.takeAt(0).widget().deleteLater()
+        elif sender == "back_button_9":
+            self.p6_pielayout.takeAt(0).widget().deleteLater()
+        elif sender == "back_button_11":
+            self.p8_donutlayout.takeAt(0).widget().deleteLater()
+        elif sender == "back_button_12":
+            self.p9_linelayout.takeAt(0).widget().deleteLater()
+        elif sender == "pushButton_3":
+            self.comingFrom = "Single"
+        elif sender == "pushButton_2":
+            self.comingFrom = "Multi"
+        elif sender == "pushButton":
+            self.comingFrom = "Capture"
     
     def on_click_pie_button(self):
+        if self.comingFrom == "Single":
+            self.videoSingleThread.stop()
+            anal = self.analysis_single
+            analList = [element * 100 for element in anal]
+            self.chartViewPieChart, self.seriesPieChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
+        elif self.comingFrom == "Multi":
+            self.multiThread.stop_threads()
+            anal = self.total_analysis_multi
+            analList = [element * 100 for element in anal]
+            self.chartViewPieChart, self.seriesPieChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
+        elif self.comingFrom == "Capture":
+            self.screenCapture.stop()
+            anal = self.analysis_screen
+            analList = [element * 100 for element in anal]
+            self.chartViewPieChart, self.seriesPieChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
+        self.p6_pielayout.addWidget(self.chartViewPieChart, 0, Qt.AlignHCenter|Qt.AlignVCenter)   
         self.stackedWidget.setCurrentIndex(10)
         
     def on_click_histogram_button(self):
-        self.chartViewBarChart, self.seriesBarChart = self.drawBarChart(happy=0, sad=50, disgust=0, anger=0, neutral=0, suprised=50, fear=0, width=1000, height=600)
-        self.p7_histogramlayout.addWidget(self.chartViewBarChart, 0, Qt.AlignHCenter|Qt.AlignVCenter)
+        if self.comingFrom == "Single":
+            self.videoSingleThread.stop()
+            anal = self.analysis_single
+            analList = [element * 100 for element in anal]
+            self.chartViewBarChart, self.seriesBarChart = self.drawBarChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=600)
+        elif self.comingFrom == "Multi":
+            self.multiThread.stop_threads()
+            anal = self.total_analysis_multi
+            analList = [element * 100 for element in anal]
+            self.chartViewBarChart, self.seriesBarChart = self.drawBarChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=600)
+        elif self.comingFrom == "Capture":
+            self.screenCapture.stop()
+            anal = self.analysis_screen
+            analList = [element * 100 for element in anal]
+            self.chartViewBarChart, self.seriesBarChart = self.drawBarChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=600)
+        self.p7_histogramlayout.addWidget(self.chartViewBarChart, 0, Qt.AlignHCenter|Qt.AlignVCenter)   
         self.stackedWidget.setCurrentIndex(11)
         
     def on_click_donut_button(self):
-        self.stackedWidget.setCurrentIndex(12)
+        if self.comingFrom == "Single":
+            self.videoSingleThread.stop()
+            anal = self.analysis_single
+            analList = [element * 100 for element in anal]
+            self.chartViewDonutChart, self.seriesDonutChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700, donut = True)
+        elif self.comingFrom == "Multi":
+            self.multiThread.stop_threads()
+            anal = self.total_analysis_multi
+            analList = [element * 100 for element in anal]
+            self.chartViewDonutChart, self.seriesDonutChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700, donut = True)
+        elif self.comingFrom == "Capture":
+            self.screenCapture.stop()
+            anal = self.analysis_screen
+            analList = [element * 100 for element in anal]
+            self.chartViewDonutChart, self.seriesDonutChart = self.drawPieChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700, donut = True)
+        self.p8_donutlayout.addWidget(self.chartViewDonutChart, 0, Qt.AlignHCenter|Qt.AlignVCenter) 
+        self.stackedWidget.setCurrentIndex(12)  
         
     def on_click_line_button(self):
+        if self.comingFrom == "Single":
+            self.videoSingleThread.stop()
+            anal = self.analysis_single
+            analList = [element * 100 for element in anal]
+            self.chartViewLineChart, self.seriesLineChart = self.drawLineChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
+        elif self.comingFrom == "Multi":
+            self.multiThread.stop_threads()
+            anal = self.total_analysis_multi
+            analList = [element * 100 for element in anal]
+            self.chartViewLineChart, self.seriesLineChart = self.drawLineChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
+        elif self.comingFrom == "Capture":
+            self.screenCapture.stop()
+            anal = self.analysis_screen
+            analList = [element * 100 for element in anal]
+            self.chartViewLineChart, self.seriesLineChart = self.drawLineChart(happy=analList[3], sad=analList[4], disgust=analList[1], anger=analList[0], neutral=analList[6], suprised=analList[5], fear=analList[2], width=1000, height=700)
+        self.p9_linelayout.addWidget(self.chartViewLineChart, 0, Qt.AlignHCenter|Qt.AlignVCenter) 
         self.stackedWidget.setCurrentIndex(13)
     
-    def on_click_table_button(self):
-        self.stackedWidget.setCurrentIndex(14)
+    # def on_click_table_button(self):
+    #     self.stackedWidget.setCurrentIndex(14)
+    #     if self.comingFrom == "Single":
+    #         pass
+    #     elif self.comingFrom == "Multi":
+    #         pass
+    #     elif self.comingFrom == "Capture":
+    #         pass
         
     def on_click_view_data(self):
         self.stackedWidget.setCurrentIndex(15)
+        if self.comingFrom == "Single":
+            pass
+        elif self.comingFrom == "Multi":
+            pass
+        elif self.comingFrom == "Capture":
+            pass
     
     def AnalysisSlot(self, anal):
         self.analysis_screen = anal
@@ -350,33 +437,71 @@ class Ui_MainWindow(object):
         chartview.setMinimumWidth(width)
         return chartview, series
     
-    
-    def drawPieChart(self):
+    def drawPieChart(self, happy=0, sad=0, disgust=0, anger=0, neutral= 100, suprised=0, fear=0, width=600, height=500, donut=False):
         series = QPieSeries()
-        series.append("Happy", 0)
-        series.setPieSize(1.0)
+        arr = [happy, sad, disgust, anger, neutral, suprised, fear]
+        maxone  = max(arr)
+        maxind = arr.index(maxone)
+
+        series.setPieSize(0.75)
+        series.setLabelsVisible(True)
+        if donut:
+            series.setHoleSize(0.40)
         
-        #slice = series.append("Happy", 50)
-        #slice.setExploded(True)
-        #slice.setLabelVisible(True)
+        series.append("Happy", happy)
+        series.append("Sad", sad)
+        series.append("Disgust", disgust)
+        series.append("Anger", anger)
+        series.append("Neutral", neutral)
+        series.append("Suprised", suprised)
+        series.append("Fear", fear)
         
-        series.append("Sad", 0)
-        series.append("Disgust", 0)
-        series.append("Anger", 0)
-        series.append("Neutral", 0)
-        series.append("Suprised", 0)
-        series.append("Fear", 0)
+        mslice = series.slices()[maxind]
+        mslice.setExploded(True)
+        mslice.setLabelVisible(True)
         
         chart = QChart()
         chart.addSeries(series)
-        chart.setTitle("Emotions Pie Chart")
+        if donut:
+            chart.setTitle("Emotions Donut Chart")
+        else:
+            chart.setTitle("Emotions Pie Chart")
         chart.setAnimationOptions(QChart.SeriesAnimations)
         chart.setTheme(QChart.ChartThemeDark)
-        chart.setBackgroundBrush(QBrush(QColor("transparent")))
+        #chart.setBackgroundBrush(QBrush(QColor("transparent")))
         chartview = QChartView(chart)
-        chartview.setMinimumHeight(500)
-        chartview.setMinimumWidth(600)
+        chartview.setMinimumHeight(height)
+        chartview.setMinimumWidth(width)
         return chartview, series
+   
+    def drawLineChart(self, happy=0, sad=0, disgust=0, anger=0, neutral= 100, suprised=0, fear=0, width=600, height=500):
+        series = QLineSeries()
+        series.append(10, happy)
+        series.append(20, sad)
+        series.append(30, disgust)
+        series.append(40, anger)
+        series.append(50, neutral)
+        series.append(60, suprised)
+        series.append(70, fear)
+        series.setPointLabelsVisible(True)
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle("Emotions Line Chart")
+        
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        chart.setTheme(QChart.ChartThemeDark)
+        #categories = ["Happy", "Sad", "Disgust", "Angry", "Neutral", "Suprised", "Fear"]
+        #axis = QBarCategoryAxis()
+        #axis.append(categories)
+        chart.createDefaultAxes()
+        #chart.setAxisX(axis, series)
+        #series.attachAxis(axis)
+        chart.legend().setVisible(True)
+        chartview = QChartView(chart)
+        chartview.setMinimumHeight(height)
+        chartview.setMinimumWidth(width)
+        return chartview, series
+
     
     def updatePieChart(self, series, happy, sad, disgust, anger, neutral, suprised, fear):
         series.clear()
@@ -623,7 +748,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.setObjectName(u"pushButton_3")
         self.pushButton_3.setMinimumSize(QSize(100, 50))
         self.pushButton_3.setStyleSheet(u"border-image: url(:/Horus Main Page/gotoresults.png);")
-        self.pushButton_3.clicked.connect(self.on_click_goto_result)
+        self.pushButton_3.clicked.connect(partial(self.on_click_goto_result, "pushButton_3"))
 
         self.horizontalLayout.addWidget(self.pushButton_3, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -719,12 +844,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.scanLabelp4, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
-        self.replay_button_2 = QPushButton(self.p4_bottom_frame)
-        self.replay_button_2.setObjectName(u"replay_button_2")
-        self.replay_button_2.setMinimumSize(QSize(50, 50))
-        self.replay_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/repeat.png);")
+        # self.replay_button_2 = QPushButton(self.p4_bottom_frame)
+        # self.replay_button_2.setObjectName(u"replay_button_2")
+        # self.replay_button_2.setMinimumSize(QSize(50, 50))
+        # self.replay_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/repeat.png);")
 
-        self.horizontalLayout_6.addWidget(self.replay_button_2, 0, Qt.AlignHCenter|Qt.AlignBottom)
+        # self.horizontalLayout_6.addWidget(self.replay_button_2, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
         self.pause_button_2 = QPushButton(self.p4_bottom_frame)
         self.pause_button_2.setObjectName(u"pause_button_2")
@@ -755,7 +880,7 @@ class Ui_MainWindow(object):
         self.pushButton_2.setObjectName(u"pushButton_2")
         self.pushButton_2.setMinimumSize(QSize(100, 50))
         self.pushButton_2.setStyleSheet(u"border-image: url(:/Horus Main Page/gotoresults.png);")
-        self.pushButton_2.clicked.connect(self.on_click_goto_result)
+        self.pushButton_2.clicked.connect(partial(self.on_click_goto_result, "pushButton_2"))
 
         self.horizontalLayout_6.addWidget(self.pushButton_2, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -781,12 +906,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3.addWidget(self.back_button_5, 0, Qt.AlignLeft|Qt.AlignTop)
 
-        self.upload_button_2 = QPushButton(self.p4_top_frame)
-        self.upload_button_2.setObjectName(u"upload_button_2")
-        self.upload_button_2.setMinimumSize(QSize(80, 50))
-        self.upload_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/upload.png);")
+        # self.upload_button_2 = QPushButton(self.p4_top_frame)
+        # self.upload_button_2.setObjectName(u"upload_button_2")
+        # self.upload_button_2.setMinimumSize(QSize(80, 50))
+        # self.upload_button_2.setStyleSheet(u"border-image: url(:/Horus Main Page/upload.png);")
 
-        self.horizontalLayout_3.addWidget(self.upload_button_2, 0, Qt.AlignRight|Qt.AlignTop)
+        # self.horizontalLayout_3.addWidget(self.upload_button_2, 0, Qt.AlignRight|Qt.AlignTop)
 
 
         self.gridLayout_14.addWidget(self.p4_top_frame, 0, 0, 1, 1)
@@ -945,12 +1070,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addWidget(self.screenCapScanLabel, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
-        self.replay_button = QPushButton(self.p21_bottom_frame)
-        self.replay_button.setObjectName(u"replay_button")
-        self.replay_button.setMinimumSize(QSize(50, 50))
-        self.replay_button.setStyleSheet(u"border-image: url(:/Horus Main Page/repeat.png);")
+        # self.replay_button = QPushButton(self.p21_bottom_frame)
+        # self.replay_button.setObjectName(u"replay_button")
+        # self.replay_button.setMinimumSize(QSize(50, 50))
+        # self.replay_button.setStyleSheet(u"border-image: url(:/Horus Main Page/repeat.png);")
 
-        self.horizontalLayout_8.addWidget(self.replay_button, 0, Qt.AlignHCenter|Qt.AlignBottom)
+        # self.horizontalLayout_8.addWidget(self.replay_button, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
         self.pause_button = QPushButton(self.p21_bottom_frame)
         self.pause_button.setObjectName(u"pause_button")
@@ -972,7 +1097,7 @@ class Ui_MainWindow(object):
         self.pushButton.setObjectName(u"pushButton")
         self.pushButton.setMinimumSize(QSize(100, 50))
         self.pushButton.setStyleSheet(u"border-image: url(:/Horus Main Page/gotoresults.png);")
-        self.pushButton.clicked.connect(self.on_click_goto_result)
+        self.pushButton.clicked.connect(partial(self.on_click_goto_result, "pushButton"))
 
         self.horizontalLayout_8.addWidget(self.pushButton, 0, Qt.AlignHCenter|Qt.AlignBottom)
 
@@ -997,12 +1122,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_7.addWidget(self.back_button_3, 0, Qt.AlignLeft|Qt.AlignTop)
 
-        self.upload_button = QPushButton(self.p21_top_frame)
-        self.upload_button.setObjectName(u"upload_button")
-        self.upload_button.setMinimumSize(QSize(80, 50))
-        self.upload_button.setStyleSheet(u"border-image: url(:/Horus Main Page/upload.png);")
+        # self.upload_button = QPushButton(self.p21_top_frame)
+        # self.upload_button.setObjectName(u"upload_button")
+        # self.upload_button.setMinimumSize(QSize(80, 50))
+        # self.upload_button.setStyleSheet(u"border-image: url(:/Horus Main Page/upload.png);")
 
-        self.horizontalLayout_7.addWidget(self.upload_button, 0, Qt.AlignRight|Qt.AlignTop)
+        # self.horizontalLayout_7.addWidget(self.upload_button, 0, Qt.AlignRight|Qt.AlignTop)
 
         self.gridLayout_16.addWidget(self.p21_top_frame, 0, 0, 1, 1)
 
@@ -1099,13 +1224,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_9.addWidget(self.histogram_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
-        self.table_button = QPushButton(self.page_22)
-        self.table_button.setObjectName(u"table_button")
-        self.table_button.setMinimumSize(QSize(150, 40))
-        self.table_button.setStyleSheet(u"border-image: url(:/Horus Main Page/4.png);")
-        self.table_button.clicked.connect(self.on_click_table_button)
+        # self.table_button = QPushButton(self.page_22)
+        # self.table_button.setObjectName(u"table_button")
+        # self.table_button.setMinimumSize(QSize(150, 40))
+        # self.table_button.setStyleSheet(u"border-image: url(:/Horus Main Page/4.png);")
+        # self.table_button.clicked.connect(self.on_click_table_button)
 
-        self.horizontalLayout_9.addWidget(self.table_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
+        # self.horizontalLayout_9.addWidget(self.table_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.donut_button = QPushButton(self.page_22)
         self.donut_button.setObjectName(u"donut_button")
@@ -1347,6 +1472,8 @@ class Ui_MainWindow(object):
         self.p6_chart_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p6_chart_frame.setFrameShape(QFrame.StyledPanel)
         self.p6_chart_frame.setFrameShadow(QFrame.Raised)
+        self.p6_pielayout = QVBoxLayout(self.p6_chart_frame)
+        self.p6_pielayout.setObjectName(u"p6_pielayout")
 
         self.page_6_Vert.addWidget(self.p6_chart_frame)
 
@@ -1468,6 +1595,8 @@ class Ui_MainWindow(object):
         self.p8_chart_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p8_chart_frame.setFrameShape(QFrame.StyledPanel)
         self.p8_chart_frame.setFrameShadow(QFrame.Raised)
+        self.p8_donutlayout = QVBoxLayout(self.p8_chart_frame)
+        self.p8_donutlayout.setObjectName(u"p8_donutlayout")
 
         self.verticalLayoutp8.addWidget(self.p8_chart_frame)
 
@@ -1518,6 +1647,10 @@ class Ui_MainWindow(object):
         self.label_5.setStyleSheet(u"")
 
         self.verticalLayout_26.addWidget(self.label_5)
+        self.label_8 = QLabel(self.p9Top)
+        self.label_8.setObjectName(u"label_8")
+
+        self.verticalLayout_26.addWidget(self.label_8)
         self.verticalLayoutp9.addWidget(self.p9Top)
 
         self.p9_chart_frame = QFrame(self.p9MainFrame)
@@ -1528,6 +1661,8 @@ class Ui_MainWindow(object):
         self.p9_chart_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p9_chart_frame.setFrameShape(QFrame.StyledPanel)
         self.p9_chart_frame.setFrameShadow(QFrame.Raised)
+        self.p9_linelayout = QVBoxLayout(self.p9_chart_frame)
+        self.p9_linelayout.setObjectName(u"p9_linelayout")
 
         self.verticalLayoutp9.addWidget(self.p9_chart_frame)
 
@@ -1664,7 +1799,6 @@ class Ui_MainWindow(object):
 
         self.stackedWidget.setCurrentIndex(0)
 
-
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
@@ -1689,13 +1823,13 @@ class Ui_MainWindow(object):
         self.upload_button_3.setText("")
         self.p3_screen_label.setText("")
         self.scanLabelp4.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
-        self.replay_button_2.setText("")
+        #self.replay_button_2.setText("")
         self.pause_button_2.setText("")
         self.play_button_2.setText("")
         self.changeCamButton.setText(QCoreApplication.translate("Horus", u"Change Camera", None))
         self.pushButton_2.setText("")
         self.back_button_5.setText("")
-        self.upload_button_2.setText("")
+        #self.upload_button_2.setText("")
         self.p4_screen_label.setText("")
         self.detectionLabel.setText(QCoreApplication.translate("Horus", u"Click Start Button to Continue", None))
         self.back_button_4.setText("")
@@ -1704,12 +1838,12 @@ class Ui_MainWindow(object):
         self.p5_screen_label.setText("")
         self.rightCounterLabel.setText("")
         self.screenCapScanLabel.setText(QCoreApplication.translate("Horus", u"SCANNING...", None))
-        self.replay_button.setText("")
+        #self.replay_button.setText("")
         self.pause_button.setText("")
         self.play_button.setText("")
         self.pushButton.setText("")
         self.back_button_3.setText("")
-        self.upload_button.setText("")
+        #self.upload_button.setText("")
         self.p21_screen_label.setText("")
         self.back_button_2.setText("")
         self.chooseo_output_type.setText("")
@@ -1717,7 +1851,7 @@ class Ui_MainWindow(object):
         self.linechart_button.setText("")
         self.pie_button.setText("")
         self.histogram_button.setText("")
-        self.table_button.setText("")
+        # self.table_button.setText("")
         self.donut_button.setText("")
         self.edit_button.setText("")
         self.download_button.setText("")
@@ -1742,6 +1876,7 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">Donut Chart</span></p></body></html>", None))
         self.back_button_12.setText("")
         self.label_5.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">Line Chart</span></p></body></html>", None))
+        self.label_8.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Happy &gt; Sad &gt; Disgust &gt; Angry &gt; Neutral &gt; Suprised &gt; Fear </span></p></body></html>", None))
         self.back_button_14.setText("")
         self.label_7.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">Table</span></p></body></html>", None))
         self.back_button_13.setText("")

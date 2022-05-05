@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1101</width>
-    <height>723</height>
+    <width>1109</width>
+    <height>743</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
        <string notr="true">border-image: url(:/Horus Main Page/startscreen.jpg);</string>
       </property>
       <property name="currentIndex">
-       <number>9</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -1377,7 +1377,7 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+          <item>
            <widget class="QPushButton" name="table_button">
             <property name="minimumSize">
              <size>
@@ -2184,6 +2184,13 @@ p, li { white-space: pre-wrap; }
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Happy &amp;gt; Sad &amp;gt; Disgust &amp;gt; Angry &amp;gt; Neutral &amp;gt; Suprised &amp;gt; Fear &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
             <widget class="QFrame" name="p9_chart_frame">
@@ -2465,6 +2472,8 @@ p, li { white-space: pre-wrap; }
   </widget>
  </widget>
  <resources>
+  <include location="ui_img/ui_img/startscreen.qrc"/>
+  <include location="ui_img/ui_img/startscreen.qrc"/>
   <include location="ui_img/ui_img/startscreen.qrc"/>
   <include location="../../../../.designer/backup/ui_img/ui_img/startscreen.qrc"/>
  </resources>
