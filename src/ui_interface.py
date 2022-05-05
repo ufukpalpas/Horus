@@ -60,7 +60,6 @@ class Ui_MainWindow(object):
                 pass
         elif sender == "back_button_3":
             self.screenCapture.stop()
-            
         
     def on_click_single_user(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -177,6 +176,24 @@ class Ui_MainWindow(object):
         self.stackedWidget.setCurrentIndex(5)   
     def on_click_goto_result(self):
         self.stackedWidget.setCurrentIndex(6)
+    
+    def on_click_pie_button(self):
+        self.stackedWidget.setCurrentIndex(10)
+        
+    def on_click_histogram_button(self):
+        self.stackedWidget.setCurrentIndex(11)
+        
+    def on_click_donut_button(self):
+        self.stackedWidget.setCurrentIndex(12)
+        
+    def on_click_line_button(self):
+        self.stackedWidget.setCurrentIndex(13)
+    
+    def on_click_table_button(self):
+        self.stackedWidget.setCurrentIndex(14)
+        
+    def on_click_view_data(self):
+        self.stackedWidget.setCurrentIndex(15)
     
     def AnalysisSlot(self, anal):
         self.analysis_screen = anal
@@ -981,7 +998,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_7.addWidget(self.upload_button, 0, Qt.AlignRight|Qt.AlignTop)
 
-
         self.gridLayout_16.addWidget(self.p21_top_frame, 0, 0, 1, 1)
 
         self.chartViewBarCapture, self.seriesBarCapture = self.drawBarChart()
@@ -1045,6 +1061,7 @@ class Ui_MainWindow(object):
         self.viewCodeButton.setObjectName(u"viewCodeButton")
         self.viewCodeButton.setMinimumSize(QSize(300, 50))
         self.viewCodeButton.setStyleSheet(u"border-image: url(:/Horus Main Page/view.png);")
+        self.viewCodeButton.clicked.connect(self.on_click_view_data)
 
         self.verticalLayout_15.addWidget(self.viewCodeButton, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -1056,6 +1073,7 @@ class Ui_MainWindow(object):
         self.linechart_button.setObjectName(u"linechart_button")
         self.linechart_button.setMinimumSize(QSize(150, 40))
         self.linechart_button.setStyleSheet(u"border-image: url(:/Horus Main Page/1.png);")
+        self.linechart_button.clicked.connect(self.on_click_line_button)
 
         self.horizontalLayout_9.addWidget(self.linechart_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -1063,6 +1081,7 @@ class Ui_MainWindow(object):
         self.pie_button.setObjectName(u"pie_button")
         self.pie_button.setMinimumSize(QSize(150, 40))
         self.pie_button.setStyleSheet(u"border-image: url(:/Horus Main Page/2.png);")
+        self.pie_button.clicked.connect(self.on_click_pie_button)
 
         self.horizontalLayout_9.addWidget(self.pie_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -1070,6 +1089,7 @@ class Ui_MainWindow(object):
         self.histogram_button.setObjectName(u"histogram_button")
         self.histogram_button.setMinimumSize(QSize(150, 40))
         self.histogram_button.setStyleSheet(u"border-image: url(:/Horus Main Page/3.png);")
+        self.histogram_button.clicked.connect(self.on_click_histogram_button)
 
         self.horizontalLayout_9.addWidget(self.histogram_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -1077,6 +1097,7 @@ class Ui_MainWindow(object):
         self.table_button.setObjectName(u"table_button")
         self.table_button.setMinimumSize(QSize(150, 40))
         self.table_button.setStyleSheet(u"border-image: url(:/Horus Main Page/4.png);")
+        self.table_button.clicked.connect(self.on_click_table_button)
 
         self.horizontalLayout_9.addWidget(self.table_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -1084,6 +1105,7 @@ class Ui_MainWindow(object):
         self.donut_button.setObjectName(u"donut_button")
         self.donut_button.setMinimumSize(QSize(150, 40))
         self.donut_button.setStyleSheet(u"border-image: url(:/Horus Main Page/5.png);")
+        self.donut_button.clicked.connect(self.on_click_donut_button)
 
         self.horizontalLayout_9.addWidget(self.donut_button, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -1268,6 +1290,363 @@ class Ui_MainWindow(object):
         self.gridLayout_20.addWidget(self.p25_top_frame, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.page_25)
+        
+        self.page_6 = QWidget()
+        self.page_6.setObjectName(u"page_6")
+        self.gridLayout_5 = QGridLayout(self.page_6)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.page_6_Vert = QVBoxLayout()
+        self.page_6_Vert.setSpacing(0)
+        self.page_6_Vert.setObjectName(u"page_6_Vert")
+        self.pie_top = QFrame(self.page_6)
+        self.pie_top.setObjectName(u"pie_top")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.pie_top.sizePolicy().hasHeightForWidth())
+        self.pie_top.setSizePolicy(sizePolicy4)
+        self.pie_top.setMinimumSize(QSize(0, 0))
+        self.pie_top.setMaximumSize(QSize(16777215, 200))
+        self.pie_top.setSizeIncrement(QSize(0, 0))
+        self.pie_top.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.pie_top.setFrameShape(QFrame.StyledPanel)
+        self.pie_top.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_18 = QVBoxLayout(self.pie_top)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.back_button_9 = QPushButton(self.pie_top)
+        self.back_button_9.setObjectName(u"back_button_9")
+        self.back_button_9.setMinimumSize(QSize(125, 50))
+        self.back_button_9.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
+        self.back_button_9.clicked.connect(self.on_click_goto_result)
+
+        self.verticalLayout_18.addWidget(self.back_button_9, 0, Qt.AlignLeft|Qt.AlignTop)
+
+        self.label_2 = QLabel(self.pie_top)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setMinimumSize(QSize(300, 50))
+        font7 = QFont()
+        font7.setPointSize(24)
+        font7.setUnderline(False)
+        self.label_2.setFont(font7)
+        self.label_2.setStyleSheet(u"")
+
+        self.verticalLayout_18.addWidget(self.label_2)
+
+        self.page_6_Vert.addWidget(self.pie_top, 0, Qt.AlignTop)
+
+        self.p6_chart_frame = QFrame(self.page_6)
+        self.p6_chart_frame.setObjectName(u"p6_chart_frame")
+        sizePolicy1.setHeightForWidth(self.p6_chart_frame.sizePolicy().hasHeightForWidth())
+        self.p6_chart_frame.setSizePolicy(sizePolicy1)
+        self.p6_chart_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p6_chart_frame.setFrameShape(QFrame.StyledPanel)
+        self.p6_chart_frame.setFrameShadow(QFrame.Raised)
+
+        self.page_6_Vert.addWidget(self.p6_chart_frame)
+
+
+        self.gridLayout_5.addLayout(self.page_6_Vert, 0, 0, 1, 1)
+
+        self.stackedWidget.addWidget(self.page_6)
+
+        self.page_7 = QWidget()
+        self.page_7.setObjectName(u"page_7")
+        self.verticalLayout_17 = QVBoxLayout(self.page_7)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
+        self.verticalLayout_16 = QVBoxLayout()
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.frame = QFrame(self.page_7)
+        self.frame.setObjectName(u"frame")
+        self.frame.setFrameShape(QFrame.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_20 = QVBoxLayout(self.frame)
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.pie_top_2 = QFrame(self.frame)
+        self.pie_top_2.setObjectName(u"pie_top_2")
+        sizePolicy4.setHeightForWidth(self.pie_top_2.sizePolicy().hasHeightForWidth())
+        self.pie_top_2.setSizePolicy(sizePolicy4)
+        self.pie_top_2.setMinimumSize(QSize(0, 0))
+        self.pie_top_2.setMaximumSize(QSize(16777215, 200))
+        self.pie_top_2.setSizeIncrement(QSize(0, 0))
+        self.pie_top_2.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.pie_top_2.setFrameShape(QFrame.StyledPanel)
+        self.pie_top_2.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_19 = QVBoxLayout(self.pie_top_2)
+        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.back_button_10 = QPushButton(self.pie_top_2)
+        self.back_button_10.setObjectName(u"back_button_10")
+        self.back_button_10.setMinimumSize(QSize(125, 50))
+        self.back_button_10.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
+        self.back_button_10.clicked.connect(self.on_click_goto_result)
+
+        self.verticalLayout_19.addWidget(self.back_button_10, 0, Qt.AlignLeft|Qt.AlignTop)
+
+        self.label_3 = QLabel(self.pie_top_2)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMinimumSize(QSize(300, 50))
+        self.label_3.setFont(font7)
+        self.label_3.setStyleSheet(u"")
+
+        self.verticalLayout_19.addWidget(self.label_3)
+
+
+        self.verticalLayout_20.addWidget(self.pie_top_2)
+
+        self.p6_chart_frame_2 = QFrame(self.frame)
+        self.p6_chart_frame_2.setObjectName(u"p6_chart_frame_2")
+        sizePolicy1.setHeightForWidth(self.p6_chart_frame_2.sizePolicy().hasHeightForWidth())
+        self.p6_chart_frame_2.setSizePolicy(sizePolicy1)
+        self.p6_chart_frame_2.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p6_chart_frame_2.setFrameShape(QFrame.StyledPanel)
+        self.p6_chart_frame_2.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayout_20.addWidget(self.p6_chart_frame_2)
+
+
+        self.verticalLayout_16.addWidget(self.frame)
+
+
+        self.verticalLayout_17.addLayout(self.verticalLayout_16)
+
+        self.stackedWidget.addWidget(self.page_7)
+        
+        self.page_8 = QWidget()
+        self.page_8.setObjectName(u"page_8")
+        self.verticalLayout_30 = QVBoxLayout(self.page_8)
+        self.verticalLayout_30.setObjectName(u"verticalLayout_30")
+        self.verticalLayout_21 = QVBoxLayout()
+        self.verticalLayout_21.setObjectName(u"verticalLayout_21")
+        self.p8mainframe = QFrame(self.page_8)
+        self.p8mainframe.setObjectName(u"p8mainframe")
+        self.p8mainframe.setFrameShape(QFrame.StyledPanel)
+        self.p8mainframe.setFrameShadow(QFrame.Raised)
+        self.verticalLayoutp8 = QVBoxLayout(self.p8mainframe)
+        self.verticalLayoutp8.setObjectName(u"verticalLayoutp8")
+        self.p8_top = QFrame(self.p8mainframe)
+        self.p8_top.setObjectName(u"p8_top")
+        self.p8_top.setGeometry(QRect(0, 0, 1025, 129))
+        sizePolicy4.setHeightForWidth(self.p8_top.sizePolicy().hasHeightForWidth())
+        self.p8_top.setSizePolicy(sizePolicy4)
+        self.p8_top.setMinimumSize(QSize(0, 0))
+        self.p8_top.setMaximumSize(QSize(16777215, 200))
+        self.p8_top.setSizeIncrement(QSize(0, 0))
+        self.p8_top.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p8_top.setFrameShape(QFrame.StyledPanel)
+        self.p8_top.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_25 = QVBoxLayout(self.p8_top)
+        self.verticalLayout_25.setObjectName(u"verticalLayout_25")
+        self.back_button_11 = QPushButton(self.p8_top)
+        self.back_button_11.setObjectName(u"back_button_11")
+        self.back_button_11.setMinimumSize(QSize(125, 50))
+        self.back_button_11.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
+        self.back_button_11.clicked.connect(self.on_click_goto_result)
+
+        self.verticalLayout_25.addWidget(self.back_button_11, 0, Qt.AlignLeft|Qt.AlignTop)
+
+        self.label_4 = QLabel(self.p8_top)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setMinimumSize(QSize(300, 50))
+        self.label_4.setFont(font7)
+        self.label_4.setStyleSheet(u"")
+
+        self.verticalLayout_25.addWidget(self.label_4)
+        self.verticalLayoutp8.addWidget(self.p8_top)
+
+        self.p8_chart_frame = QFrame(self.p8mainframe)
+        self.p8_chart_frame.setObjectName(u"p8_chart_frame")
+        self.p8_chart_frame.setGeometry(QRect(0, 136, 1025, 499))
+        sizePolicy1.setHeightForWidth(self.p8_chart_frame.sizePolicy().hasHeightForWidth())
+        self.p8_chart_frame.setSizePolicy(sizePolicy1)
+        self.p8_chart_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p8_chart_frame.setFrameShape(QFrame.StyledPanel)
+        self.p8_chart_frame.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayoutp8.addWidget(self.p8_chart_frame)
+
+        self.verticalLayout_21.addWidget(self.p8mainframe)
+
+
+        self.verticalLayout_30.addLayout(self.verticalLayout_21)
+
+        self.stackedWidget.addWidget(self.page_8)
+
+        self.page_9 = QWidget()
+        self.page_9.setObjectName(u"page_9")
+        self.verticalLayout_23 = QVBoxLayout(self.page_9)
+        self.verticalLayout_23.setObjectName(u"verticalLayout_23")
+        self.verticalLayout_24 = QVBoxLayout()
+        self.verticalLayout_24.setObjectName(u"verticalLayout_24")
+        self.p9MainFrame = QFrame(self.page_9)
+        self.p9MainFrame.setObjectName(u"p9MainFrame")
+        self.p9MainFrame.setFrameShape(QFrame.StyledPanel)
+        self.p9MainFrame.setFrameShadow(QFrame.Raised)
+        self.verticalLayoutp9 = QVBoxLayout(self.p9MainFrame)
+        self.verticalLayoutp9.setObjectName(u"verticalLayoutp9")
+        self.p9Top = QFrame(self.p9MainFrame)
+        self.p9Top.setObjectName(u"p9Top")
+        self.p9Top.setGeometry(QRect(0, 0, 1025, 129))
+        sizePolicy4.setHeightForWidth(self.p9Top.sizePolicy().hasHeightForWidth())
+        self.p9Top.setSizePolicy(sizePolicy4)
+        self.p9Top.setMinimumSize(QSize(0, 0))
+        self.p9Top.setMaximumSize(QSize(16777215, 200))
+        self.p9Top.setSizeIncrement(QSize(0, 0))
+        self.p9Top.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p9Top.setFrameShape(QFrame.StyledPanel)
+        self.p9Top.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_26 = QVBoxLayout(self.p9Top)
+        self.verticalLayout_26.setObjectName(u"verticalLayout_26")
+        self.back_button_12 = QPushButton(self.p9Top)
+        self.back_button_12.setObjectName(u"back_button_12")
+        self.back_button_12.setMinimumSize(QSize(125, 50))
+        self.back_button_12.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
+        self.back_button_12.clicked.connect(self.on_click_goto_result)
+
+        self.verticalLayout_26.addWidget(self.back_button_12, 0, Qt.AlignLeft|Qt.AlignTop)
+
+        self.label_5 = QLabel(self.p9Top)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setMinimumSize(QSize(300, 50))
+        self.label_5.setFont(font7)
+        self.label_5.setStyleSheet(u"")
+
+        self.verticalLayout_26.addWidget(self.label_5)
+        self.verticalLayoutp9.addWidget(self.p9Top)
+
+        self.p9_chart_frame = QFrame(self.p9MainFrame)
+        self.p9_chart_frame.setObjectName(u"p9_chart_frame")
+        self.p9_chart_frame.setGeometry(QRect(0, 136, 1025, 499))
+        sizePolicy1.setHeightForWidth(self.p9_chart_frame.sizePolicy().hasHeightForWidth())
+        self.p9_chart_frame.setSizePolicy(sizePolicy1)
+        self.p9_chart_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p9_chart_frame.setFrameShape(QFrame.StyledPanel)
+        self.p9_chart_frame.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayoutp9.addWidget(self.p9_chart_frame)
+
+        self.verticalLayout_24.addWidget(self.p9MainFrame)
+
+        self.verticalLayout_23.addLayout(self.verticalLayout_24)
+
+        self.stackedWidget.addWidget(self.page_9)
+        self.page_10 = QWidget()
+        self.page_10.setObjectName(u"page_10")
+        self.verticalLayout_22 = QVBoxLayout(self.page_10)
+        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
+        self.verticalLayout_27 = QVBoxLayout()
+        self.verticalLayout_27.setObjectName(u"verticalLayout_27")
+        self.p1mainframe = QFrame(self.page_10)
+        self.p1mainframe.setObjectName(u"p1mainframe")
+        self.p1mainframe.setFrameShape(QFrame.StyledPanel)
+        self.p1mainframe.setFrameShadow(QFrame.Raised)
+        self.verticalLayoutp10 = QVBoxLayout(self.p1mainframe)
+        self.verticalLayoutp10.setObjectName(u"verticalLayoutp10")
+        self.p10top = QFrame(self.p1mainframe)
+        self.p10top.setObjectName(u"p10top")
+        self.p10top.setGeometry(QRect(0, 0, 1025, 129))
+        sizePolicy4.setHeightForWidth(self.p10top.sizePolicy().hasHeightForWidth())
+        self.p10top.setSizePolicy(sizePolicy4)
+        self.p10top.setMinimumSize(QSize(0, 0))
+        self.p10top.setMaximumSize(QSize(16777215, 200))
+        self.p10top.setSizeIncrement(QSize(0, 0))
+        self.p10top.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p10top.setFrameShape(QFrame.StyledPanel)
+        self.p10top.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_29 = QVBoxLayout(self.p10top)
+        self.verticalLayout_29.setObjectName(u"verticalLayout_29")
+        self.back_button_14 = QPushButton(self.p10top)
+        self.back_button_14.setObjectName(u"back_button_14")
+        self.back_button_14.setMinimumSize(QSize(125, 50))
+        self.back_button_14.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
+        self.back_button_14.clicked.connect(self.on_click_goto_result)
+
+        self.verticalLayout_29.addWidget(self.back_button_14, 0, Qt.AlignLeft|Qt.AlignTop)
+
+        self.label_7 = QLabel(self.p10top)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setMinimumSize(QSize(300, 50))
+        self.label_7.setFont(font7)
+        self.label_7.setStyleSheet(u"")
+
+        self.verticalLayout_29.addWidget(self.label_7)
+        self.verticalLayoutp10.addWidget(self.p10top)
+
+        self.p10_chart_frame = QFrame(self.p1mainframe)
+        self.p10_chart_frame.setObjectName(u"p10_chart_frame")
+        self.p10_chart_frame.setGeometry(QRect(0, 136, 1025, 499))
+        sizePolicy1.setHeightForWidth(self.p10_chart_frame.sizePolicy().hasHeightForWidth())
+        self.p10_chart_frame.setSizePolicy(sizePolicy1)
+        self.p10_chart_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p10_chart_frame.setFrameShape(QFrame.StyledPanel)
+        self.p10_chart_frame.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayoutp10.addWidget(self.p10_chart_frame)
+
+        self.verticalLayout_27.addWidget(self.p1mainframe)
+
+        self.verticalLayout_22.addLayout(self.verticalLayout_27)
+
+        self.stackedWidget.addWidget(self.page_10)
+        
+        self.page_11 = QWidget()
+        self.page_11.setObjectName(u"page_11")
+        self.verticalLayout_31 = QVBoxLayout(self.page_11)
+        self.verticalLayout_31.setObjectName(u"verticalLayout_31")
+        self.verticalLayout_28 = QVBoxLayout()
+        self.verticalLayout_28.setObjectName(u"verticalLayout_28")
+        self.frame_3 = QFrame(self.page_11)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setFrameShape(QFrame.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_33 = QVBoxLayout(self.frame_3)
+        self.verticalLayout_33.setObjectName(u"verticalLayout_33")
+        self.pie_top_4 = QFrame(self.frame_3)
+        self.pie_top_4.setObjectName(u"pie_top_4")
+        sizePolicy4.setHeightForWidth(self.pie_top_4.sizePolicy().hasHeightForWidth())
+        self.pie_top_4.setSizePolicy(sizePolicy4)
+        self.pie_top_4.setMinimumSize(QSize(0, 0))
+        self.pie_top_4.setMaximumSize(QSize(16777215, 200))
+        self.pie_top_4.setSizeIncrement(QSize(0, 0))
+        self.pie_top_4.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.pie_top_4.setFrameShape(QFrame.StyledPanel)
+        self.pie_top_4.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_32 = QVBoxLayout(self.pie_top_4)
+        self.verticalLayout_32.setObjectName(u"verticalLayout_32")
+        self.back_button_13 = QPushButton(self.pie_top_4)
+        self.back_button_13.setObjectName(u"back_button_13")
+        self.back_button_13.setMinimumSize(QSize(125, 50))
+        self.back_button_13.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
+        self.back_button_13.clicked.connect(self.on_click_goto_result)
+
+        self.verticalLayout_32.addWidget(self.back_button_13, 0, Qt.AlignLeft|Qt.AlignTop)
+
+        self.label_6 = QLabel(self.pie_top_4)
+        self.label_6.setObjectName(u"label_6")
+        self.label_6.setMinimumSize(QSize(300, 50))
+        self.label_6.setFont(font7)
+        self.label_6.setStyleSheet(u"")
+
+        self.verticalLayout_32.addWidget(self.label_6)
+
+
+        self.verticalLayout_33.addWidget(self.pie_top_4)
+
+        self.p6_chart_frame_4 = QFrame(self.frame_3)
+        self.p6_chart_frame_4.setObjectName(u"p6_chart_frame_4")
+        sizePolicy1.setHeightForWidth(self.p6_chart_frame_4.sizePolicy().hasHeightForWidth())
+        self.p6_chart_frame_4.setSizePolicy(sizePolicy1)
+        self.p6_chart_frame_4.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+        self.p6_chart_frame_4.setFrameShape(QFrame.StyledPanel)
+        self.p6_chart_frame_4.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayout_33.addWidget(self.p6_chart_frame_4)
+
+
+        self.verticalLayout_28.addWidget(self.frame_3)
+
+
+        self.verticalLayout_31.addLayout(self.verticalLayout_28)
+
+        self.stackedWidget.addWidget(self.page_11)
 
         self.gridLayout.addWidget(self.stackedWidget, 0, 0, 1, 1)
 
@@ -1347,4 +1726,16 @@ class Ui_MainWindow(object):
         self.runbutton.setText(QCoreApplication.translate("MainWindow", u"RUN", None))
         self.back_button_7.setText("")
         self.label.setText("")
+        self.back_button_9.setText("")
+        self.label_2.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">PIE CHART</span></p></body></html>", None))
+        self.back_button_10.setText("")
+        self.label_3.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">HISTOGRAM</span></p></body></html>", None))
+        self.back_button_11.setText("")
+        self.label_4.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">Donut Chart</span></p></body></html>", None))
+        self.back_button_12.setText("")
+        self.label_5.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">Line Chart</span></p></body></html>", None))
+        self.back_button_14.setText("")
+        self.label_7.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">Table</span></p></body></html>", None))
+        self.back_button_13.setText("")
+        self.label_6.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">View Recorded Data</span></p></body></html>", None))
     # retranslateUi
