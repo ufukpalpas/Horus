@@ -444,6 +444,7 @@ class ScreenCaptureThread(QThread):
     ValChanged = pyqtSignal(int) #camera check forward
     Analysis = pyqtSignal(list) #list of analysis of emotions
     Real_time_analysis = pyqtSignal(list) #real-time analysis of emotions
+    RandomSender = pyqtSignal(str)
     
     def __init__(self):
         super().__init__()
@@ -462,6 +463,12 @@ class ScreenCaptureThread(QThread):
 #        self.average_emotions[5] = 0 #Surprised
 #        self.average_emotions[6] = 0 #Neutral
         self.captured_emotions = self.average_emotions.copy()
+        fourcc = cv2.VideoWriter_fourcc('X','V','I','D') #(*'MP42')
+        rand_string = randomStr(self)
+        name_of = "saved_videos\\single_video_" + str(rand_string) +".avi"
+        self.RandomSender.emit(rand_string)
+        self.videoWriter = cv2.VideoWriter(str(name_of), fourcc, 10.0, (640, 480))
+        
     
     def run(self):
         self.ThreadActive = True
@@ -567,6 +574,8 @@ class ScreenCaptureThread(QThread):
                     #print("Emotion with highest acc: ", maxed_emotion, " with array ac: ", average_emotion)
                         if len(average_emotion) != 0:
                             self.Real_time_analysis.emit(list(average_emotion))
+                    frame_to_write = cv2.resize(frame, (640, 480))
+                    self.videoWriter.write(frame_to_write)
                     Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
                     #Image = cv2.resize(Image,(1920,1080))
                     #FlippedImage = cv2.flip(Image, 1)
