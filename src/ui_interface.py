@@ -155,10 +155,11 @@ class Ui_MainWindow(object):
         if len(self.checkedCameraInds) > 0:
             self.multiThread = VideoMultiThread(self.checkedCameraInds)
             self.frame_multi = 0
+            self.multiThread.RandomSender.connect(self.RandomSlot)
             self.multiThread.startThreads()
             self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
             self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)#   ValChanged.connect(self.CameraCheckSlot)
-            self.multiThread.RandomSender.connect(self.RandomSlot)
+            
             self.multiThread.Analysis.connect(self.AnalysisSlot_3)
             self.multiThread.Thread_specific_anal.connect(self.AnalysisSlot_4)
             self.stackedWidget.setCurrentIndex(3)
