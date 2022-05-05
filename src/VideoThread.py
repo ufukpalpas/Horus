@@ -14,6 +14,7 @@ from mss import mss
 import collections
 import random
 import string
+import glob
 
 def randomStr(self):
     letters = string.ascii_letters
@@ -798,4 +799,27 @@ class LieDetectionThread(QThread):
     
     def stop(self):
         self.ThreadActive = False
-        self.quit()              
+        self.quit()             
+        
+class View_Analysis(QThread):
+    ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
+    def init(self, fileName):
+        super().__init__()
+        self.fileName = fileName
+    
+    def run(self):
+        searching = str('saved_videos\\*' + self.fileName + ".avi")
+        fileNameList = glob.glob(searching)
+        cap = cv2.VideoCapture(fileNameList[0])
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
+                    #Image = cv2.resize(Image,(1920,1080))
+                    #FlippedImage = cv2.flip(Image, 1)
+                ConvertToQtFormat = QImage(Image_.data, Image_.shape[1], Image_.shape[0], QImage.Format_RGB888)
+                Pic = ConvertToQtFormat.scaled(1920,1080,Qt.KeepAspectRatio)
+                if not self.pauseVid:
+                    self.ImageUpdate.emit(Pic)
+        
+        
