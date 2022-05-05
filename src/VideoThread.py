@@ -463,16 +463,16 @@ class ScreenCaptureThread(QThread):
 #        self.average_emotions[5] = 0 #Surprised
 #        self.average_emotions[6] = 0 #Neutral
         self.captured_emotions = self.average_emotions.copy()
-        fourcc = cv2.VideoWriter_fourcc('X','V','I','D') #(*'MP42')
-        rand_string = randomStr(self)
-        name_of = "saved_videos\\single_video_" + str(rand_string) +".avi"
-        self.RandomSender.emit(rand_string)
-        self.videoWriter = cv2.VideoWriter(str(name_of), fourcc, 10.0, (640, 480))
         
     
     def run(self):
         self.ThreadActive = True
         cap = cv2.VideoCapture(0)
+        fourcc = cv2.VideoWriter_fourcc('X','V','I','D') #(*'MP42')
+        rand_string = randomStr(self)
+        name_of = "saved_videos\\screen_video_" + str(rand_string) +".avi"
+        self.RandomSender.emit(rand_string)
+        self.videoWriter = cv2.VideoWriter(str(name_of), fourcc, 10.0, (640, 480))
         # if not cap.isOpened():
         #     print("^No camera detected!")
         self.changePixmap = True
