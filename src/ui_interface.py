@@ -170,6 +170,7 @@ class Ui_MainWindow(object):
         self.screenCapture.ImageUpdate.connect(self.ImageUpdateSlot_3)
         self.screenCapture.ValChanged.connect(self.CameraCheckSlot)
         self.screenCapture.Analysis.connect(self.AnalysisSlot)
+        self.screenCapture.Real_time_analysis.connect(self.AnalysisSlot_5)
         self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(5)   
     def on_click_goto_result(self):
@@ -178,6 +179,10 @@ class Ui_MainWindow(object):
     def AnalysisSlot(self, anal):
         self.analysis_screen = anal
         print("last analy: ", self.analysis_screen) #Screen Capture Analysis
+        
+    def AnalysisSlot_5(self, anal):
+        self.real_time_analysis_screen = anal
+        print("Screen Capture Analysis: ", self.real_time_analysis_screen)    
         
     def AnalysisSlot_2(self, anal):
         self.analysis_single = anal
