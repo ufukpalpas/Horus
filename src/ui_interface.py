@@ -8,6 +8,7 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 from msilib.schema import ListView
+from re import S
 from lie import DeceptionDetectionVoice
 from VideoThread import ScreenCaptureThread, VideoMultiThread, VideoSingleThread, LieDetectionThread
 import PyQt5
@@ -174,13 +175,18 @@ class Ui_MainWindow(object):
         self.screenCapture.Real_time_analysis.connect(self.AnalysisSlot_5)
         self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(5)   
-    def on_click_goto_result(self):
+        
+    def on_click_goto_result(self, sender):
         self.stackedWidget.setCurrentIndex(6)
+        if sender == "back_button_10": #histogram page
+            self.p7_histogramlayout.takeAt(0).widget().deleteLater()
     
     def on_click_pie_button(self):
         self.stackedWidget.setCurrentIndex(10)
         
     def on_click_histogram_button(self):
+        self.chartViewBarChart, self.seriesBarChart = self.drawBarChart(happy=0, sad=50, disgust=0, anger=0, neutral=0, suprised=50, fear=0, width=1000, height=600)
+        self.p7_histogramlayout.addWidget(self.chartViewBarChart, 0, Qt.AlignHCenter|Qt.AlignVCenter)
         self.stackedWidget.setCurrentIndex(11)
         
     def on_click_donut_button(self):
@@ -303,7 +309,7 @@ class Ui_MainWindow(object):
         self.rightCounterLabel.setText(QCoreApplication.translate("Horus", u"Listening|Recording", None))
             # t -= 1
     
-    def drawBarChart(self):
+    def drawBarChart(self, happy=0, sad=0, disgust=0, anger=0, neutral=100, suprised=0, fear=0, width=600, height=500):
         set0 = QBarSet("Happy")
         set1 = QBarSet('Sad')
         set2 = QBarSet('Disgust')
@@ -312,13 +318,13 @@ class Ui_MainWindow(object):
         set5 = QBarSet('Suprised')
         set6 = QBarSet('Fear')
         
-        set0 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        set1 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        set2 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        set3 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        set4 << 0 << 0 << 0 << 0 << 100 << 0 << 0
-        set5 << 0 << 0 << 0 << 0 << 0 << 0 << 0
-        set6 << 0 << 0 << 0 << 0 << 0 << 0 << 0
+        set0 << happy << 0 << 0 << 0 << 0 << 0 << 0
+        set1 << 0 << sad << 0 << 0 << 0 << 0 << 0
+        set2 << 0 << 0 << disgust << 0 << 0 << 0 << 0
+        set3 << 0 << 0 << 0 << anger << 0 << 0 << 0
+        set4 << 0 << 0 << 0 << 0 << neutral << 0 << 0
+        set5 << 0 << 0 << 0 << 0 << 0 << suprised << 0
+        set6 << 0 << 0 << 0 << 0 << 0 << 0 << fear
         
         series = QBarSeries()
         series.append(set0)
@@ -331,7 +337,7 @@ class Ui_MainWindow(object):
         
         chart = QChart()
         chart.addSeries(series)
-        chart.setTitle("Emotions Pie Chart")
+        chart.setTitle("Emotions Bar Chart")
         chart.setAnimationOptions(QChart.SeriesAnimations)
         chart.setTheme(QChart.ChartThemeDark)
         categories = ["Happy", "Sad", "Disgust", "Angry", "Neutral", "Suprised", "Fear"]
@@ -340,8 +346,8 @@ class Ui_MainWindow(object):
         chart.createDefaultAxes()
         chart.setAxisX(axis, series)
         chartview = QChartView(chart)
-        chartview.setMinimumHeight(500)
-        chartview.setMinimumWidth(600)
+        chartview.setMinimumHeight(height)
+        chartview.setMinimumWidth(width)
         return chartview, series
     
     
@@ -801,7 +807,7 @@ class Ui_MainWindow(object):
         self.p4_chart_frame1.setFrameShape(QFrame.StyledPanel)
         self.p4_chart_frame1.setFrameShadow(QFrame.Raised) 
         self.verticalLayoutp4ch = QVBoxLayout(self.p4_chart_frame1)
-        self.verticalLayoutp4ch.setObjectName(u"verticalLayout_12")
+        self.verticalLayoutp4ch.setObjectName(u"verticalLayoutp4ch")
         
         self.screenlayout2.addWidget(self.p4_chart_frame1)
         
@@ -1317,7 +1323,7 @@ class Ui_MainWindow(object):
         self.back_button_9.setObjectName(u"back_button_9")
         self.back_button_9.setMinimumSize(QSize(125, 50))
         self.back_button_9.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_9.clicked.connect(self.on_click_goto_result)
+        self.back_button_9.clicked.connect(partial(self.on_click_goto_result, "back_button_9"))
 
         self.verticalLayout_18.addWidget(self.back_button_9, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -1377,7 +1383,7 @@ class Ui_MainWindow(object):
         self.back_button_10.setObjectName(u"back_button_10")
         self.back_button_10.setMinimumSize(QSize(125, 50))
         self.back_button_10.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_10.clicked.connect(self.on_click_goto_result)
+        self.back_button_10.clicked.connect(partial(self.on_click_goto_result, "back_button_10"))
 
         self.verticalLayout_19.addWidget(self.back_button_10, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -1399,6 +1405,8 @@ class Ui_MainWindow(object):
         self.p6_chart_frame_2.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p6_chart_frame_2.setFrameShape(QFrame.StyledPanel)
         self.p6_chart_frame_2.setFrameShadow(QFrame.Raised)
+        self.p7_histogramlayout = QVBoxLayout(self.p6_chart_frame_2)
+        self.p7_histogramlayout.setObjectName(u"p7_histogramlayout")
 
         self.verticalLayout_20.addWidget(self.p6_chart_frame_2)
 
@@ -1439,7 +1447,7 @@ class Ui_MainWindow(object):
         self.back_button_11.setObjectName(u"back_button_11")
         self.back_button_11.setMinimumSize(QSize(125, 50))
         self.back_button_11.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_11.clicked.connect(self.on_click_goto_result)
+        self.back_button_11.clicked.connect(partial(self.on_click_goto_result, "back_button_11"))
 
         self.verticalLayout_25.addWidget(self.back_button_11, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -1499,7 +1507,7 @@ class Ui_MainWindow(object):
         self.back_button_12.setObjectName(u"back_button_12")
         self.back_button_12.setMinimumSize(QSize(125, 50))
         self.back_button_12.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_12.clicked.connect(self.on_click_goto_result)
+        self.back_button_12.clicked.connect(partial(self.on_click_goto_result, "back_button_12"))
 
         self.verticalLayout_26.addWidget(self.back_button_12, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -1557,7 +1565,7 @@ class Ui_MainWindow(object):
         self.back_button_14.setObjectName(u"back_button_14")
         self.back_button_14.setMinimumSize(QSize(125, 50))
         self.back_button_14.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_14.clicked.connect(self.on_click_goto_result)
+        self.back_button_14.clicked.connect(partial(self.on_click_goto_result, "back_button_14"))
 
         self.verticalLayout_29.addWidget(self.back_button_14, 0, Qt.AlignLeft|Qt.AlignTop)
 
@@ -1615,7 +1623,7 @@ class Ui_MainWindow(object):
         self.back_button_13.setObjectName(u"back_button_13")
         self.back_button_13.setMinimumSize(QSize(125, 50))
         self.back_button_13.setStyleSheet(u"border-image: url(:/Horus Main Page/backButton.png);")
-        self.back_button_13.clicked.connect(self.on_click_goto_result)
+        self.back_button_13.clicked.connect(partial(self.on_click_goto_result, "back_button_13"))
 
         self.verticalLayout_32.addWidget(self.back_button_13, 0, Qt.AlignLeft|Qt.AlignTop)
 
