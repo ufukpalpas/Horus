@@ -12,12 +12,21 @@ from tensorflow.keras.models import model_from_json
 from tensorflow.keras.preprocessing.image import img_to_array
 from mss import mss
 import collections
+import random
+import string
+
+def randomStr(self):
+    letters = string.ascii_letters
+    st = ''.join(random.choice(letters) for i in range(10))
+    return st
 
 class VideoSingleThread(QThread):
     ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
     ValChanged = pyqtSignal(int) #camera check forward
     EmotionUpdate = pyqtSignal(list) #emotions to charts
     Analysis = pyqtSignal(list) #List of analysis of emotions
+    RandomSender = pyqtSignal(str)
+    
     
     def __init__(self):
         super().__init__()
@@ -41,6 +50,11 @@ class VideoSingleThread(QThread):
     def run(self):
         self.ThreadActive = True
         cap = cv2.VideoCapture(0)
+        fourcc = cv2.VideoWriter_fourcc('X','V','I','D') #(*'MP42')
+        rand_string = randomStr(self)
+        name_of = "saved_videos\\single_video_" + str(rand_string) +".avi"
+        self.RandomSender.emit(rand_string)
+        videoWriter = cv2.VideoWriter(str(name_of), fourcc, 10.0, (640, 480))
         # if not cap.isOpened():
         #     print("^No camera detected!")
         self.changePixmap = True
@@ -139,6 +153,8 @@ class VideoSingleThread(QThread):
                     #average_emotion = self.captured_emotions/ np.sum(self.captured_emotions)
                     #print("av: ", self.average_emotions)
                 #print("cap: ", maxed_emotion, " with ac: ", average_emotion)
+                frame_to_write = cv2.resize(frame, (640, 480))
+                videoWriter.write(frame_to_write)
                 Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
                 #Image = cv2.resize(Image,(1920,1080))
                 #FlippedImage = cv2.flip(Image, 1)
@@ -159,6 +175,8 @@ class VideoSingleThread(QThread):
                     self.changePixmap = False
             cv2.waitKey(1)
         cap.release()
+        videoWriter.release()
+        
      
     def pause(self):
         self.pauseVid = True
