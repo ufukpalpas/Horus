@@ -340,6 +340,7 @@ class Ui_MainWindow(object):
         
     def RandomSlot(self, rand):
         self.randomName = rand
+        print(self.randomName)
         
     def EmotionSlot(self, emotion):
         if len(emotion) == 0:
