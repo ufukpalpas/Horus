@@ -753,14 +753,26 @@ class Ui_MainWindow(object):
 
         self.gridLayout_14.addWidget(self.p4_top_frame, 0, 0, 1, 1)
 
+        self.chartViewBarMulti, self.seriesBarMulti = self.drawBarChart()
+
         self.p4_middle_frame = QFrame(self.page_4)
         self.p4_middle_frame.setObjectName(u"p4_middle_frame")
         self.p4_middle_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p4_middle_frame.setLineWidth(0)
-        self.screenlayout2 = QVBoxLayout(self.p4_middle_frame)
+        self.screenlayout2 = QHBoxLayout(self.p4_middle_frame)
         self.screenlayout2.setSpacing(0)
         self.screenlayout2.setObjectName(u"screenlayout2")
         self.screenlayout2.setContentsMargins(0, 0, 0, 0)
+        
+        self.p4_chart_frame1 = QFrame(self.p4_middle_frame)
+        self.p4_chart_frame1.setObjectName(u"p4_chart_frame1")
+        self.p4_chart_frame1.setFrameShape(QFrame.StyledPanel)
+        self.p4_chart_frame1.setFrameShadow(QFrame.Raised) 
+        self.verticalLayoutp4ch = QVBoxLayout(self.p4_chart_frame1)
+        self.verticalLayoutp4ch.setObjectName(u"verticalLayout_12")
+        
+        self.screenlayout2.addWidget(self.p4_chart_frame1)
+        
         self.p4_screen_label = QLabel(self.p4_middle_frame)
         self.p4_screen_label.setObjectName(u"p4_screen_label")
         sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -768,6 +780,8 @@ class Ui_MainWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.p4_screen_label.sizePolicy().hasHeightForWidth())
         self.p4_screen_label.setSizePolicy(sizePolicy2)
+
+        self.verticalLayoutp4ch.addWidget(self.chartViewBarMulti, 0, Qt.AlignLeft|Qt.AlignVCenter)
 
         self.screenlayout2.addWidget(self.p4_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)
 
@@ -955,19 +969,32 @@ class Ui_MainWindow(object):
 
         self.gridLayout_16.addWidget(self.p21_top_frame, 0, 0, 1, 1)
 
+        self.chartViewBarCapture, self.seriesBarCapture = self.drawBarChart()
+
         self.p21_middle_frame = QFrame(self.page_21)
         self.p21_middle_frame.setObjectName(u"p21_middle_frame")
         self.p21_middle_frame.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p21_middle_frame.setLineWidth(0)
-        self.screenlayout4 = QVBoxLayout(self.p21_middle_frame)
+        self.screenlayout4 = QHBoxLayout(self.p21_middle_frame)
         self.screenlayout4.setSpacing(0)
         self.screenlayout4.setObjectName(u"screenlayout4")
         self.screenlayout4.setContentsMargins(0, 0, 0, 0)
+        
+        self.p21_chart_frame1 = QFrame(self.p21_middle_frame)
+        self.p21_chart_frame1.setObjectName(u"p21_chart_frame1")
+        self.p21_chart_frame1.setFrameShape(QFrame.StyledPanel)
+        self.p21_chart_frame1.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_21 = QVBoxLayout(self.p21_chart_frame1)
+        self.verticalLayout_21.setObjectName(u"verticalLayout_21")
+
+        self.screenlayout4.addWidget(self.p21_chart_frame1)
+    
         self.p21_screen_label = QLabel(self.p21_middle_frame)
         self.p21_screen_label.setObjectName(u"p21_screen_label")
         sizePolicy2.setHeightForWidth(self.p21_screen_label.sizePolicy().hasHeightForWidth())
         self.p21_screen_label.setSizePolicy(sizePolicy2)
         
+        self.verticalLayout_21.addWidget(self.chartViewBarCapture, 0, Qt.AlignHCenter|Qt.AlignVCenter)
         self.screenlayout4.addWidget(self.p21_screen_label, 0, Qt.AlignRight|Qt.AlignVCenter)
 
         self.gridLayout_16.addWidget(self.p21_middle_frame, 1, 0, 1, 1)
