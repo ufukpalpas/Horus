@@ -152,6 +152,7 @@ class Ui_MainWindow(object):
                 self.checkedCameraInds.append(index)
         if len(self.checkedCameraInds) > 0:
             self.multiThread = VideoMultiThread(self.checkedCameraInds)
+            self.frame_multi = 0
             self.multiThread.startThreads()
             self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
             self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)#   ValChanged.connect(self.CameraCheckSlot)
@@ -170,6 +171,7 @@ class Ui_MainWindow(object):
         self.screenCapture.ImageUpdate.connect(self.ImageUpdateSlot_3)
         self.screenCapture.ValChanged.connect(self.CameraCheckSlot)
         self.screenCapture.Analysis.connect(self.AnalysisSlot)
+        self.screen_frame =0
         self.screenCapture.Real_time_analysis.connect(self.AnalysisSlot_5)
         self.p21_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         self.stackedWidget.setCurrentIndex(5)   
@@ -181,8 +183,12 @@ class Ui_MainWindow(object):
         print("last analy: ", self.analysis_screen) #Screen Capture Analysis
         
     def AnalysisSlot_5(self, anal):
-        self.real_time_analysis_screen = anal
-        print("Screen Capture Analysis: ", self.real_time_analysis_screen)    
+        self.screen_frame += 1
+        self.real_time_analysis_screen = [element * 100 for element in anal]
+        print("Screen Capture Analysis: ", self.real_time_analysis_screen) #Real Time Screen Capture Analysis
+        if self.screen_frame > 4:
+            self.updateBarChart(self.seriesBarCapture, self.real_time_analysis_screen[3], self.real_time_analysis_screen[4], self.real_time_analysis_screen[1], self.real_time_analysis_screen[0], self.real_time_analysis_screen[6], self.real_time_analysis_screen[5], self.real_time_analysis_screen[2])
+            self.screen_frame = 0
         
     def AnalysisSlot_2(self, anal):
         self.analysis_single = anal
@@ -193,8 +199,12 @@ class Ui_MainWindow(object):
         print("Total analysis from multi thread: ", self.total_analysis_multi) #Crowd Control Last Analysis
      
     def AnalysisSlot_4(self, thread_name, anal):
-        self.thread_specific_anal = anal
-        print("Real Time Analysis from thread: ",thread_name, " :", self.thread_specific_anal) #Real Time Thread Analysis, with Thread Name
+        self.frame_multi += 1
+        self.thread_specific_anal = [element *100 for element in anal]
+        #print("Real Time Analysis from thread: ",thread_name, " :", self.thread_specific_anal) #Real Time Thread Analysis, with Thread Name
+        if self.frame_multi > 4:
+            self.updateBarChart(self.seriesBarMulti, self.thread_specific_anal[3], self.thread_specific_anal[4], self.thread_specific_anal[1], self.thread_specific_anal[0], self.thread_specific_anal[6], self.thread_specific_anal[5], self.thread_specific_anal[2])
+            self.frame_multi = 0
      
     def ImageUpdateSlot(self, Image):
         self.p3_screen_label.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))

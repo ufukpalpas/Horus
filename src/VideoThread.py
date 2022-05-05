@@ -404,7 +404,7 @@ class VideoMultiThread(QThread):
         self.analysis_array.append(anal)
         self.analysis_result = np.sum(self.analysis_array, axis=0) / len(self.analysis_array)
         #self.Analysis.emit(list(self.analysis_result))
-        self.Thread_specific_anal.emit(self.sender().name, list(self.analysis_result))
+        self.Thread_specific_anal.emit(self.sender().name, list(anal))
     
     
     def getCurrentImageUpdate(self):
