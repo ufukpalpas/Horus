@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1109</width>
-    <height>743</height>
+    <width>1105</width>
+    <height>733</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
        <string notr="true">border-image: url(:/Horus Main Page/startscreen.jpg);</string>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -1721,20 +1721,67 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-            <widget class="QLabel" name="label">
-             <property name="minimumSize">
-              <size>
-               <width>300</width>
-               <height>50</height>
-              </size>
+           <item>
+            <widget class="QFrame" name="frame_4">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
              </property>
-             <property name="styleSheet">
-              <string notr="true">border-image: url(:/Horus Main Page/listanalysis.png);</string>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
              </property>
-             <property name="text">
-              <string/>
-             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <item alignment="Qt::AlignLeft">
+               <widget class="QLabel" name="label">
+                <property name="minimumSize">
+                 <size>
+                  <width>300</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">border-image: url(:/Horus Main Page/listanalysis.png);</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item alignment="Qt::AlignRight">
+               <widget class="QPushButton" name="pushButton_4">
+                <property name="minimumSize">
+                 <size>
+                  <width>125</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="sizeIncrement">
+                 <size>
+                  <width>125</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                  <italic>true</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Continue</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="ui_img/ui_img/startscreen.qrc">
+                  <normaloff>:/Horus Main Page/play.png</normaloff>:/Horus Main Page/play.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>35</width>
+                  <height>35</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>

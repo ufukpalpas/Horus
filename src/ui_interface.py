@@ -22,6 +22,7 @@ from functools import partial
 import cv2
 import time
 import pickle
+import os
 import startscreen_rc
 try:
     from PyQt5.QtChart import QChartView, QChart, QBarSet, QBarSeries, QBarCategoryAxis, QPercentBarSeries, QPieSeries, QLineSeries
@@ -46,6 +47,7 @@ class Ui_MainWindow(object):
         self.decVidResult = None
         self.thread_specific_anal = []
         self.comingFrom = None
+        self.playFromSave = False
         
     def on_click_to_menu(self, sender):
         self.stackedWidget.setCurrentIndex(1)
@@ -102,6 +104,7 @@ class Ui_MainWindow(object):
         self.videoSingleThread.replay()
     
     def on_click_list_analyses(self):
+        self.namesInListSaved = self.list_saved_analysis()
         self.stackedWidget.setCurrentIndex(9)
         
     def on_click_crowd_control(self):
@@ -129,6 +132,75 @@ class Ui_MainWindow(object):
             item.setEditable(False)
             self.model.appendRow(item)         
         self.stackedWidget.setCurrentIndex(8)
+         
+    def on_click_view_saved(self):
+        dirpath = r'save_files'
+        for index in self.listView_2.selectedIndexes():
+            item = self.listView_2.model().itemFromIndex(index)
+            fname = item.text()
+        try:
+            ind = self.namesInListSaved.index(fname)
+            namesArr = []
+            for root, dirs, files in os.walk(dirpath):
+                for file in files:
+                    namesArr.append(file)
+            filename = "save_files/" + namesArr[ind]
+            with open(filename, 'rb') as f:
+                if filename[0] == "C":
+                    self.analysis_screen = pickle.load(f)
+                    self.comingFrom = "Capture"
+                elif filename[0] == "M":
+                    self.total_analysis_multi = pickle.load(f)
+                    self.comingFrom = "Multi"
+                else:
+                    self.analysis_single = pickle.load(f)
+                    self.comingFrom = "Single"
+            self.stackedWidget.setCurrentIndex(6)
+        except:
+            pass
+        
+    def list_saved_analysis(self):
+        dirpath = r'save_files'
+        namesArr = []
+        for root, dirs, files in os.walk(dirpath):
+            for file in files:
+                namesArr.append(file)
+        count = len(namesArr)
+        arr = []        
+        ff2 = QFont("Times")
+        ff2.setPointSize(16)
+        model = PyQt5.QtGui.QStandardItemModel()
+        self.listView_2.setModel(model)
+        
+        single = 1
+        multi = 1
+        capture = 1
+        for i in range(count):
+            item = PyQt5.QtGui.QStandardItem()
+            strr = namesArr[i]
+            if strr[0] == "C":
+                fname = "Capture Camera Mode Save " + str(capture)
+                capture += 1
+            elif strr[0] == "M":
+                fname = "Multiple Camera Mode Save " + str(multi)
+                multi += 1 
+            else:
+                fname = "Single Camera Mode Save " + str(single)
+                single += 1 
+            arr.append(fname)
+            item.setText(fname)
+            item.setFont(ff2)
+            item.setEditable(False)
+            #item.setCheckable(True)
+            model.appendRow(item) 
+            
+        if count == 0:
+            item = PyQt5.QtGui.QStandardItem()
+            item.setText("No Save File Detected")
+            item.setFont(ff2)
+            item.setEditable(False)
+            model.appendRow(item)         
+        return arr  
         
     def on_click_change_cam(self):
         if self.multiThread.currentThread == (self.multiThread.threadCount - 1):
@@ -143,7 +215,6 @@ class Ui_MainWindow(object):
             self.multiThread.getCurrentImageUpdate().connect(self.ImageUpdateSlot_2)#   ImageUpdate.connect(self.ImageUpdateSlot)
             self.multiThread.getCurrentValChanged().connect(self.CameraCheckSlot)
             print("Chosen camera ", self.multiThread.currentThread)
-            
     
     def on_click_crowd_control_run(self):
         self.checkedCameraInds = []
@@ -166,9 +237,11 @@ class Ui_MainWindow(object):
             self.p4_screen_label.setPixmap(QPixmap(u":/Horus Main Page/loading.png"))
         else:
             print("No camera Selected")
+            
     def on_click_deception_detection(self):        
         self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/clickstart.png"))
         self.stackedWidget.setCurrentIndex(4)
+        
     def on_click_screen_capture(self):
         self.screenCapture = ScreenCaptureThread()
         self.screenCapture.start()
@@ -1418,12 +1491,35 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_62.addWidget(self.back_button_7, 0, Qt.AlignLeft|Qt.AlignTop)
 
-        self.label = QLabel(self.p25_top_frame)
+        self.frame_4 = QFrame(self.p25_top_frame)
+        self.frame_4.setObjectName(u"frame_4")
+        self.frame_4.setFrameShape(QFrame.StyledPanel)
+        self.frame_4.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_15 = QHBoxLayout(self.frame_4)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.label = QLabel(self.frame_4)
         self.label.setObjectName(u"label")
         self.label.setMinimumSize(QSize(300, 50))
         self.label.setStyleSheet(u"border-image: url(:/Horus Main Page/listanalysis.png);")
 
-        self.verticalLayout_62.addWidget(self.label, 0, Qt.AlignHCenter|Qt.AlignVCenter)
+        self.horizontalLayout_15.addWidget(self.label, 0, Qt.AlignLeft)
+
+        self.pushButton_4 = QPushButton(self.frame_4)
+        self.pushButton_4.setObjectName(u"pushButton_4")
+        self.pushButton_4.setMinimumSize(QSize(125, 50))
+        self.pushButton_4.setSizeIncrement(QSize(125, 50))
+        font7 = QFont()
+        font7.setPointSize(14)
+        font7.setItalic(True)
+        self.pushButton_4.setFont(font7)
+        self.pushButton_4.setIcon(icon)
+        self.pushButton_4.setIconSize(QSize(35, 35))
+        self.pushButton_4.clicked.connect(self.on_click_view_saved)
+
+        self.horizontalLayout_15.addWidget(self.pushButton_4, 0, Qt.AlignRight)
+
+
+        self.verticalLayout_62.addWidget(self.frame_4)
 
 
         self.gridLayout_20.addWidget(self.p25_top_frame, 0, 0, 1, 1)
@@ -1876,6 +1972,7 @@ class Ui_MainWindow(object):
         self.runbutton.setText(QCoreApplication.translate("MainWindow", u"RUN", None))
         self.back_button_7.setText("")
         self.label.setText("")
+        self.pushButton_4.setText(QCoreApplication.translate("Horus", u"Continue", None))
         self.back_button_9.setText("")
         self.label_2.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">PIE CHART</span></p></body></html>", None))
         self.back_button_10.setText("")
