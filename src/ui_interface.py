@@ -10,7 +10,7 @@
 from msilib.schema import ListView
 from re import S
 from lie import DeceptionDetectionVoice
-from VideoThread import ScreenCaptureThread, VideoMultiThread, VideoSingleThread, LieDetectionThread
+from VideoThread import ScreenCaptureThread, VideoMultiThread, VideoSingleThread, LieDetectionThread, View_Analysis
 import PyQt5
 from PyQt5 import QtTest
 from PyQt5.QtGui import *
@@ -47,8 +47,7 @@ class Ui_MainWindow(object):
         self.decVidResult = None
         self.thread_specific_anal = []
         self.comingFrom = None
-        self.playFromSave = False
-        
+                
     def on_click_to_menu(self, sender):
         self.stackedWidget.setCurrentIndex(1)
         if sender == "back_button_6":
@@ -65,6 +64,8 @@ class Ui_MainWindow(object):
                 pass
         elif sender == "back_button_3":
             self.screenCapture.stop()
+        elif sender == "back_button_2":
+            self.comingFrom = None #sorun çıakrıyo mu test et
         
     def on_click_single_user(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -132,7 +133,31 @@ class Ui_MainWindow(object):
             item.setEditable(False)
             self.model.appendRow(item)         
         self.stackedWidget.setCurrentIndex(8)
-         
+    
+    def on_click_delete(self):
+        dirpath = r'save_files'
+        for index in self.listView_2.selectedIndexes():
+            item = self.listView_2.model().itemFromIndex(index)
+            fname = item.text()
+        
+        ind = self.namesInListSaved.index(fname)
+        namesArr = []
+        for root, dirs, files in os.walk(dirpath):
+            for file in files:
+                namesArr.append(file)
+        arrfilename = "save_files/" + namesArr[ind]
+        os.chmod(arrfilename, int('0777'))
+        os.remove(arrfilename)
+        if namesArr[ind][0] == "C":
+            vidfilename = namesArr[ind][18:]
+        elif namesArr[ind][0] == "M":
+            vidfilename = namesArr[ind][16:]
+        else:
+            vidfilename = namesArr[ind][17:]
+        vidfilename = "saved_videos/" + vidfilename
+        os.chmod(vidfilename, int('0777'))
+        os.remove(vidfilename)
+    
     def on_click_view_saved(self):
         dirpath = r'save_files'
         for index in self.listView_2.selectedIndexes():
@@ -149,12 +174,18 @@ class Ui_MainWindow(object):
                 if filename[0] == "C":
                     self.analysis_screen = pickle.load(f)
                     self.comingFrom = "Capture"
+                    self.randomName = filename[18:]
+                    print(self.randomName)
                 elif filename[0] == "M":
                     self.total_analysis_multi = pickle.load(f)
                     self.comingFrom = "Multi"
+                    self.randomName = filename[16:]
+                    print(self.randomName)
                 else:
                     self.analysis_single = pickle.load(f)
                     self.comingFrom = "Single"
+                    self.randomName = filename[17:]
+                    print(self.randomName)
             self.stackedWidget.setCurrentIndex(6)
         except:
             pass
@@ -201,7 +232,7 @@ class Ui_MainWindow(object):
             item.setEditable(False)
             model.appendRow(item)         
         return arr  
-        
+                
     def on_click_change_cam(self):
         if self.multiThread.currentThread == (self.multiThread.threadCount - 1):
             self.multiThread.choose_thread(0)
@@ -264,6 +295,8 @@ class Ui_MainWindow(object):
             self.p8_donutlayout.takeAt(0).widget().deleteLater()
         elif sender == "back_button_12":
             self.p9_linelayout.takeAt(0).widget().deleteLater()
+        elif sender == "back_button_13":
+            self.videoPlayer.stop()
         elif sender == "pushButton_3":
             self.comingFrom = "Single"
             self.videoSingleThread.stop()
@@ -281,7 +314,7 @@ class Ui_MainWindow(object):
             self.comingFrom = "Capture"
             fname = 'save_files/Capture_' + self.randomName
             with open(fname, 'wb') as f:
-                pickle.dump(self.analysis_screen, f)
+                pickle.dump(self.analysis_screen, f)      
     
     def on_click_pie_button(self):
         if self.comingFrom == "Single":
@@ -357,13 +390,13 @@ class Ui_MainWindow(object):
     #         pass
         
     def on_click_view_data(self):
+        self.videoPlayer = View_Analysis(fileName=self.randomName)
+        self.videoPlayer.start()
+        self.videoPlayer.ImageUpdate.connect(self.ImageUpdateSlot_videoplayer)
         self.stackedWidget.setCurrentIndex(15)
-        if self.comingFrom == "Single":
-            pass
-        elif self.comingFrom == "Multi":
-            pass
-        elif self.comingFrom == "Capture":
-            pass
+    
+    def ImageUpdateSlot_videoplayer(self, Image):
+        self.label_9.setPixmap(PyQt5.QtGui.QPixmap.fromImage(Image))
     
     def AnalysisSlot(self, anal):
         self.analysis_screen = anal
@@ -1504,6 +1537,18 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_15.addWidget(self.label, 0, Qt.AlignLeft)
 
+        self.pushButton_5 = QPushButton(self.frame_4)
+        self.pushButton_5.setObjectName(u"pushButton_5")
+        self.pushButton_5.setMinimumSize(QSize(125, 50))
+        self.pushButton_5.setSizeIncrement(QSize(125, 50))
+        font77 = QFont()
+        font77.setPointSize(14)
+        font77.setUnderline(True)
+        self.pushButton_5.setFont(font77)
+        self.pushButton_5.clicked.connect(self.on_click_delete)
+
+        self.horizontalLayout_15.addWidget(self.pushButton_5, 0, Qt.AlignRight|Qt.AlignVCenter)
+
         self.pushButton_4 = QPushButton(self.frame_4)
         self.pushButton_4.setObjectName(u"pushButton_4")
         self.pushButton_4.setMinimumSize(QSize(125, 50))
@@ -1884,6 +1929,14 @@ class Ui_MainWindow(object):
         self.p6_chart_frame_4.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
         self.p6_chart_frame_4.setFrameShape(QFrame.StyledPanel)
         self.p6_chart_frame_4.setFrameShadow(QFrame.Raised)
+        
+        self.verticalLayout_34 = QVBoxLayout(self.p6_chart_frame_4)
+        self.verticalLayout_34.setObjectName(u"verticalLayout_34")
+        self.label_9 = QLabel(self.p6_chart_frame_4)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setStyleSheet(u"border-image: url(:/Horus Main Page/empty.png);")
+
+        self.verticalLayout_34.addWidget(self.label_9, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
         self.verticalLayout_33.addWidget(self.p6_chart_frame_4)
 
@@ -1972,6 +2025,7 @@ class Ui_MainWindow(object):
         self.runbutton.setText(QCoreApplication.translate("MainWindow", u"RUN", None))
         self.back_button_7.setText("")
         self.label.setText("")
+        self.pushButton_5.setText(QCoreApplication.translate("Horus", u"DELETE", None))
         self.pushButton_4.setText(QCoreApplication.translate("Horus", u"Continue", None))
         self.back_button_9.setText("")
         self.label_2.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">PIE CHART</span></p></body></html>", None))
@@ -1986,4 +2040,5 @@ class Ui_MainWindow(object):
         self.label_7.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">Table</span></p></body></html>", None))
         self.back_button_13.setText("")
         self.label_6.setText(QCoreApplication.translate("Horus", u"<html><head/><body><p align=\"center\"><span style=\" color:#646464;\">View Recorded Data</span></p></body></html>", None))
+        self.label_9.setText("")
     # retranslateUi

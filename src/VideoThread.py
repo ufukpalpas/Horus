@@ -803,15 +803,16 @@ class LieDetectionThread(QThread):
         
 class View_Analysis(QThread):
     ImageUpdate = pyqtSignal(QImage) #thread signal forward attachment
-    def init(self, fileName):
+    def __init__(self, fileName=None):
         super().__init__()
         self.fileName = fileName
     
     def run(self):
+        self.ThreadActive = True
         searching = str('saved_videos\\*' + self.fileName + ".avi")
         fileNameList = glob.glob(searching)
         cap = cv2.VideoCapture(fileNameList[0])
-        while cap.isOpened():
+        while cap.isOpened() and self.ThreadActive:
             ret, frame = cap.read()
             if ret:
                 Image_ = cv2.cvtColor(frame , cv2.COLOR_BGR2RGB)
@@ -819,7 +820,11 @@ class View_Analysis(QThread):
                     #FlippedImage = cv2.flip(Image, 1)
                 ConvertToQtFormat = QImage(Image_.data, Image_.shape[1], Image_.shape[0], QImage.Format_RGB888)
                 Pic = ConvertToQtFormat.scaled(1920,1080,Qt.KeepAspectRatio)
-                if not self.pauseVid:
-                    self.ImageUpdate.emit(Pic)
+                
+                self.ImageUpdate.emit(Pic)
+                    
+    def stop(self):
+        self.ThreadActive = False
+        self.quit()    
         
         
