@@ -469,8 +469,12 @@ class Ui_MainWindow(object):
     
     def finishDeceptionControl(self):
         if self.decVidResult != None and self.voicePreds != None:
-            contrib = 0.2 if self.decVidResult else 0 #May change the coef
-            lie = True if (self.voicePreds[0][0][1] * 0.80 + contrib) >= 0.70 else False
+            if abs(self.voicePreds[0][0][1] - self.voicePreds[0][0][0]) <= 0.2:
+                lie = self.decVidResult
+            else:
+                lie = self.voicePreds[1][0]
+            # contrib = 0.2 if self.decVidResult else 0 #May change the coef
+            # lie = True if (self.voicePreds[0][0][1] * 0.80 + contrib) >= 0.70 else False
             if lie:
                 self.p5_screen_label.setPixmap(QPixmap(u":/Horus Main Page/lie.png"))
             else:
