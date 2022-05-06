@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="Horus Main Page">
+    <file>backButton.png</file>
+    <file>choosemode.png</file>
+    <file>crowdcontrol.png</file>
+    <file>deceptiondetection.png</file>
+    <file>Horus.png</file>
+    <file>HorusName.png</file>
+    <file>lastanalyses.png</file>
+    <file>screencaptıure.png</file>
+    <file>singleuser.png</file>
+    <file>start.png</file>
+    <file>startscreen.jpg</file>
+  </qresource>
+</RCC>
