@@ -25,4 +25,5 @@ and
 
 https://ufukpalpas.github.io/Horus/
 
-
+You can access a small demo from (in Turkish): <br>
+https://drive.google.com/file/d/1nSd0pfr9MLvKM0SK3O0bUW7hyXio1wf3/view?usp=sharing
