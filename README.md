@@ -17,7 +17,7 @@ Weights are included in the source code you can run the applicaiton simply writi
 ```
 python main.py
 ```
-All the details of the project can be seen from the reports and web site:
+All the details of the project can be seen from the reports and the website:
 
 https://horusight.tk/
 
